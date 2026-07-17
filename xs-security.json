@@ -1,0 +1,67 @@
+{
+  "xsappname": "hr-app",
+  "tenant-mode": "dedicated",
+  "description": "HR Hub - Akıllı İnsan Kaynakları Platformu",
+
+  "scopes": [
+    { "name": "$XSAPPNAME.employee.read",    "description": "Çalışan bilgilerini görüntüleme" },
+    { "name": "$XSAPPNAME.employee.write",   "description": "Çalışan bilgilerini oluşturma/güncelleme" },
+    { "name": "$XSAPPNAME.employee.delete",  "description": "Çalışan kaydı silme" },
+    { "name": "$XSAPPNAME.recruitment.read", "description": "İşe alım sürecini görüntüleme" },
+    { "name": "$XSAPPNAME.recruitment.write","description": "İşe alım sürecini yönetme" },
+    { "name": "$XSAPPNAME.performance.read", "description": "Performans değerlendirmelerini görüntüleme" },
+    { "name": "$XSAPPNAME.performance.write","description": "Performans değerlendirmesi oluşturma/güncelleme" },
+    { "name": "$XSAPPNAME.ai.execute",       "description": "AI özelliklerini çalıştırma" },
+    { "name": "$XSAPPNAME.admin",            "description": "Tam yönetici yetkisi" }
+  ],
+
+  "attributes": [
+    { "name": "department", "description": "Kullanıcının departmanı", "valueType": "string" }
+  ],
+
+  "role-templates": [
+    {
+      "name": "HR_Admin",
+      "description": "İK Yöneticisi - Tüm yetkilere sahip",
+      "scope-references": [
+        "$XSAPPNAME.employee.read",  "$XSAPPNAME.employee.write", "$XSAPPNAME.employee.delete",
+        "$XSAPPNAME.recruitment.read","$XSAPPNAME.recruitment.write",
+        "$XSAPPNAME.performance.read","$XSAPPNAME.performance.write",
+        "$XSAPPNAME.ai.execute",     "$XSAPPNAME.admin"
+      ]
+    },
+    {
+      "name": "HR_Manager",
+      "description": "Departman Yöneticisi - Ekibini yönetir, AI kullanır",
+      "scope-references": [
+        "$XSAPPNAME.employee.read", "$XSAPPNAME.employee.write",
+        "$XSAPPNAME.performance.read", "$XSAPPNAME.performance.write",
+        "$XSAPPNAME.ai.execute"
+      ],
+      "attribute-references": ["department"]
+    },
+    {
+      "name": "HR_Viewer",
+      "description": "Görüntüleyici - Sadece okuma yetkisi",
+      "scope-references": [
+        "$XSAPPNAME.employee.read", "$XSAPPNAME.recruitment.read", "$XSAPPNAME.performance.read"
+      ]
+    },
+    {
+      "name": "Employee_Self",
+      "description": "Çalışan - Kendi profili ve chatbot",
+      "scope-references": [
+        "$XSAPPNAME.employee.read", "$XSAPPNAME.performance.read", "$XSAPPNAME.ai.execute"
+      ]
+    }
+  ],
+
+  "role-collections": [
+    { "name": "HR_Admin_RC",     "description": "İK Yöneticisi",     "role-template-references": ["$XSAPPNAME.HR_Admin"] },
+    { "name": "HR_Manager_RC",   "description": "Departman Yöneticisi","role-template-references": ["$XSAPPNAME.HR_Manager"] },
+    { "name": "HR_Viewer_RC",    "description": "Görüntüleyici",     "role-template-references": ["$XSAPPNAME.HR_Viewer"] },
+    { "name": "Employee_Self_RC","description": "Çalışan Self-Servis","role-template-references": ["$XSAPPNAME.Employee_Self"] }
+  ],
+
+  "authorities-inheritance": false
+}
