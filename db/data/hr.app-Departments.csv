@@ -1,0 +1,9 @@
+ID,name,description,costCenter,headCount,createdAt,modifiedAt
+d001,İnsan Kaynakları,İK operasyonları ve stratejik planlama,CC-100,8,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+d002,Bilgi Teknolojileri,Yazılım geliştirme ve altyapı yönetimi,CC-200,12,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+d003,Finans,Muhasebe ve finansal planlama,CC-300,6,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+d004,Pazarlama,Dijital pazarlama ve marka yönetimi,CC-400,7,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+d005,Satış,Kurumsal satış ve müşteri ilişkileri,CC-500,10,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+d006,Operasyon,Üretim ve operasyon yönetimi,CC-600,9,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+d007,Ar-Ge,Araştırma ve geliştirme,CC-700,5,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+d008,Hukuk,Hukuki danışmanlık ve uyum,CC-800,3,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z

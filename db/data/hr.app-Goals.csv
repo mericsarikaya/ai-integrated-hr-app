@@ -1,0 +1,11 @@
+ID,employee_ID,review_ID,title,description,targetDate,status,weight,progress,managerRating,createdAt,modifiedAt
+g001,e003,pr001,Microservice mimarisine geçiş,Monolitik yapıyı microservice mimarisine dönüştürme,2026-06-30,COMPLETED,40,100,5,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g002,e003,pr001,Takım mentorluk programı,Junior geliştiricilere haftalık mentorluk yapma,2026-12-31,IN_PROGRESS,30,60,4,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g003,e003,pr001,Teknik dokümantasyon,Tüm servislerin API dokümantasyonunu oluşturma,2026-09-30,IN_PROGRESS,30,40,3,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g004,e004,pr002,React öğrenme,React framework'ü öğrenip bir proje tamamlama,2026-06-30,COMPLETED,50,100,4,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g005,e004,pr002,Bağımsız proje teslimi,Bir modülü bağımsız olarak tasarlayıp geliştirme,2026-09-30,IN_PROGRESS,50,30,2,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g006,e009,pr004,Kubernetes cluster kurulumu,Production Kubernetes cluster'ı kurma ve yönetme,2026-06-30,COMPLETED,40,100,5,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g007,e009,pr004,CI/CD pipeline iyileştirme,Build sürelerini %50 azaltma,2026-12-31,IN_PROGRESS,30,70,4,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g008,e009,pr004,Security scanning entegrasyonu,SAST ve DAST araçlarını pipeline'a entegre etme,2026-09-30,NOT_STARTED,30,0,,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g009,e023,pr009,AI-powered code review aracı,Otomatik kod inceleme aracı geliştirme,2026-12-31,IN_PROGRESS,50,80,5,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+g010,e023,pr009,Mimari rehber oluşturma,Departman için yazılım mimari standartları rehberi,2026-06-30,COMPLETED,50,100,5,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
