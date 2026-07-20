@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>HR-AI Asistanı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f3f4f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .chat-container { width: 400px; height: 600px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+        .header { background: #0a426e; color: white; padding: 1rem; text-align: center; font-weight: 600; }
+        .messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
+        .msg { padding: 10px 15px; border-radius: 8px; max-width: 80%; font-size: 0.9rem; line-height: 1.4; }
+        .bot { background: #e2e8f0; align-self: flex-start; color: #1e293b; }
+        .user { background: #0a426e; color: white; align-self: flex-end; }
+        .input-area { display: flex; border-top: 1px solid #e2e8f0; padding: 10px; background: white; }
+        input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; }
+        button { background: #0a426e; color: white; border: none; padding: 0 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">İK Yapay Zeka Asistanı</div>
+        <div class="messages" id="messages">
+            <div class="msg bot">Merhaba! İzin hakları, prosedürler veya bordro hakkında bana sorular sorabilirsiniz. Size nasıl yardımcı olabilirim?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="input" placeholder="Sorunuzu yazın (Örn: Yıllık iznim kaç gün?)...">
+            <button onclick="sendMessage()">Gönder</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('input');
+            const messages = document.getElementById('messages');
+            const text = input.value.trim();
+            if(!text) return;
+
+            // Kullanıcı mesajını ekle
+            messages.innerHTML += `<div class="msg user">${text}</div>`;
+            input.value = '';
+            
+            // Bot düşünüyor
+            const botId = 'msg-' + Date.now();
+            messages.innerHTML += `<div class="msg bot" id="${botId}">Düşünüyor...</div>`;
+            messages.scrollTop = messages.scrollHeight;
+
+            try {
+                const response = await fetch('/hr/askHRBot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ conversationId: "session1", question: text })
+                });
+                const data = await response.json();
+                document.getElementById(botId).innerText = data.value || (data.error && data.error.message) || JSON.stringify(data);
+            } catch (e) {
+                document.getElementById(botId).innerText = "Sisteme ulaşılamadı.";
+            }
+            messages.scrollTop = messages.scrollHeight;
+        }
+        // Enter tuşuna basıldığında mesajı gönder
+        document.getElementById('input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

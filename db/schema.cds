@@ -139,6 +139,14 @@ entity Candidates : cuid, managed {
 
     // AI analiz sonuçları
     cvAnalysis       : Composition of one CVAnalysisResults on cvAnalysis.candidate = $self;
+    // Dosya Yükleme (Fiori V4 Standartları)
+    @Core.MediaType: mediaType
+    @Core.ContentDisposition.Filename: fileName
+    resumeFile : LargeBinary;
+    
+    @Core.IsMediaType: true
+    mediaType : String;
+    fileName : String;
 }
 
 // ============================================================
