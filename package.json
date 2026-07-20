@@ -20,13 +20,24 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "hana",
-        "vcap": {
-          "name": "hr-app-hdi"
-        }
+        "kind": "sql"
       },
       "[production]": {
-        "auth": "xsuaa"
+        "auth": "xsuaa",
+        "db": {
+          "kind": "hana",
+          "vcap": {
+            "name": "hr-app-hdi"
+          }
+        }
+      },
+      "[hybrid]": {
+        "db": {
+          "kind": "hana",
+          "vcap": {
+            "name": "hr-app-hdi"
+          }
+        }
       }
     }
   }

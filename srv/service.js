@@ -1,10 +1,10 @@
-const cds = require('@sap/cds');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+import cds from '@sap/cds';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-module.exports = cds.service.impl(async function() {
+export default cds.service.impl(async function() {
     
     // Entity referansları
-    const { Employees, Candidates, JobPostings, ChatMessages, CVAnalysisResults } = this.entities('hr.app');
+    const { Employees, Candidates, JobPostings, ChatMessages, CVAnalysisResults } = this.entities;
 
     // ============================================================
     // 1. EVENT HANDLERS (VALIDASYONLAR & İŞ KURALLARI)

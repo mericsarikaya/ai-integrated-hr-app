@@ -1,0 +1,52 @@
+### 1. Sistemin Ayakta Olduğunu Doğrula (Servis Metadatası)
+GET http://localhost:4004/hr/$metadata
+
+### 2. Tüm Çalışanları Getir
+GET http://localhost:4004/hr/Employees
+
+### 3. Aktif İlanları ve Bağlı Departmanları Getir (Expand)
+GET http://localhost:4004/hr/JobPostings?$filter=status eq 'OPEN'&$expand=department,candidates
+
+### 4. Yeni Bir Çalışan Ekle (Validasyon Testi)
+# "email" alanında @ işareti olmadığı için 400 Bad Request HATA vermeli!
+POST http://localhost:4004/hr/Employees
+Content-Type: application/json
+
+{
+    "employeeNumber": "EMP999",
+    "firstName": "Test",
+    "lastName": "User",
+    "email": "testuser.com"
+}
+
+### 5. Yeni Çalışan Ekle (Başarılı)
+POST http://localhost:4004/hr/Employees
+Content-Type: application/json
+
+{
+    "employeeNumber": "EMP999",
+    "firstName": "Test",
+    "lastName": "User",
+    "email": "test@user.com",
+    "birthDate": "1990-01-01"
+}
+
+### 6. Dashboard KPI'larını Getir (Analytics Service)
+GET http://localhost:4004/analytics/getDashboardKPIs()
+
+### 7. AI Bot'a Soru Sor (Custom Action Test)
+POST http://localhost:4004/hr/askHRBot
+Content-Type: application/json
+
+{
+    "conversationId": "session_12345",
+    "question": "Kaç gün yıllık iznim var?"
+}
+
+### 8. CV Analizi Tetikle
+POST http://localhost:4004/hr/analyzeCV
+Content-Type: application/json
+
+{
+    "candidateId": "c001"
+}
