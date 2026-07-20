@@ -1,5 +1,8 @@
 using HRService as service from '../../srv/service';
 
+annotate service.Candidates with @odata.draft.enabled;
+annotate service.Employees with @odata.draft.enabled;
+
 annotate service.Candidates with @(
     UI: {
         HeaderInfo: {
@@ -34,7 +37,8 @@ annotate service.Candidates with @(
                 { Value: lastName },
                 { Value: email },
                 { Value: phone },
-                { Value: status }
+                { Value: status },
+                { Value: resumeFile, Label: 'CV Yükle (PDF)' }
             ]
         }
     }

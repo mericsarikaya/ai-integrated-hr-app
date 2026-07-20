@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Hub | Hoş Geldiniz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --accent: #3b82f6;
+            --accent-glow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.15), transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 2rem;
+        }
+        .header { text-align: center; margin-bottom: 4rem; animation: fadeInDown 0.8s ease; }
+        .header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; text-shadow: var(--accent-glow); }
+        .header p { color: #94a3b8; font-size: 1.1rem; max-width: 600px; }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .tile {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tile:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: var(--accent-glow);
+        }
+
+        .tile i { font-size: 3.5rem; color: var(--accent); margin-bottom: 1rem; }
+        .tile h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .tile p { font-size: 0.9rem; color: #94a3b8; }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>HR Hub <span></span></h1>
+        <p>Yapay Zeka Destekli İnsan Kaynakları ve Yetenek Yönetim Sistemi. Lütfen erişmek istediğiniz modülü seçin.</p>
+    </div>
+
+    <div class="grid-container">
+        
+        <!-- Fiori Adaylar (Candidates) Ekranına Gider -->
+        <a href="http://localhost:4004/$fiori-preview/HRService/Candidates#preview-app&/?sap-iapp-state=TASPOC5WC6TL4WIOWI2F9K29C9RNAYYMY8YJ5EUAE" class="tile">
+            <i class="ri-user-search-line"></i>
+            <h3>İşe Alım Yönetimi</h3>
+            <p>Adayları listele, detayları gör ve PDF yükleyerek Yapay Zeka analizini başlat.</p>
+        </a>
+
+        <!-- Fiori Çalışanlar (Employees) Ekranına Gider -->
+        <a href="http://localhost:4004/$fiori-preview/HRService/Employees#preview-app&/?sap-iapp-state=TASO5ZX2JBLM2H68E850Y2WL0IAZM7MNAYVROLH8V" class="tile">
+            <i class="ri-team-line"></i>
+            <h3>Çalışan Rehberi</h3>
+            <p>Şirket içi personeli yönet, performans ve ayrılma riski raporlarını incele.</p>
+        </a>
+
+        <!-- Chatbot Uygulamasına Gider -->
+        <a href="/chatbot.html" class="tile" style="--accent: #10b981; --accent-glow: 0 0 20px rgba(16, 185, 129, 0.4);">
+            <i class="ri-robot-2-line"></i>
+            <h3>HR Yapay Zeka Asistanı</h3>
+            <p>İzinler, maaşlar ve şirket prosedürleri hakkında anında bilgi al.</p>
+        </a>
+
+    </div>
+
+</body>
+</html>
