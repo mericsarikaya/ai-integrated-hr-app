@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.eml" id="CV_RECRUITMENT_FUNNEL" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+  <descriptions defaultDescription="İşe Alım Hunisi"/>
+  <dataSources>
+    <DataSource id="CANDIDATES"><resourceUri>HR_APP_CANDIDATES</resourceUri></DataSource>
+    <DataSource id="JOBPOSTINGS"><resourceUri>HR_APP_JOBPOSTINGS</resourceUri></DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_Candidates_Jobs" cardinality="CN_N" joinType="leftOuter">
+      <viewAttributes>
+        <viewAttribute id="CAND_ID"/>
+        <viewAttribute id="CAND_STATUS"/>
+        <viewAttribute id="JOBPOSTING_ID"/>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="JOB_TITLE"/>
+        <viewAttribute id="JOB_STATUS"/>
+      </viewAttributes>
+      <input node="CANDIDATES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAND_ID" source="ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAND_STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOBPOSTING_ID" source="JOBPOSTING_ID"/>
+      </input>
+      <input node="JOBPOSTINGS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOBPOSTING_ID" source="ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_TITLE" source="TITLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_STATUS" source="STATUS"/>
+      </input>
+      <joinAttribute name="JOBPOSTING_ID"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_Candidates_Jobs">
+    <attributes>
+      <attribute id="CAND_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Aday ID"/>
+        <keyMapping columnObjectName="Join_Candidates_Jobs" columnName="CAND_ID"/>
+      </attribute>
+      <attribute id="CAND_STATUS" order="2" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Aday Durumu"/>
+        <keyMapping columnObjectName="Join_Candidates_Jobs" columnName="CAND_STATUS"/>
+      </attribute>
+      <attribute id="JOB_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="İlan ID"/>
+        <keyMapping columnObjectName="Join_Candidates_Jobs" columnName="JOB_ID"/>
+      </attribute>
+      <attribute id="JOB_TITLE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="İlan Başlığı"/>
+        <keyMapping columnObjectName="Join_Candidates_Jobs" columnName="JOB_TITLE"/>
+      </attribute>
+      <attribute id="JOB_STATUS" order="5" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="İlan Durumu"/>
+        <keyMapping columnObjectName="Join_Candidates_Jobs" columnName="JOB_STATUS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <baseMeasures/>
+    <calculatedMeasures/>
+  </logicalModel>
+</Calculation:scenario>

@@ -19,6 +19,12 @@
   "private": true,
   "cds": {
     "requires": {
+      "db": {
+        "kind": "hana",
+        "vcap": {
+          "name": "hr-app-hdi"
+        }
+      },
       "[production]": {
         "auth": "xsuaa"
       }

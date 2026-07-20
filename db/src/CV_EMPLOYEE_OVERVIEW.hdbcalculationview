@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.eml" id="CV_EMPLOYEE_OVERVIEW" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+  <descriptions defaultDescription="Çalışan Genel Bakış"/>
+  <dataSources>
+    <DataSource id="EMPLOYEES"><resourceUri>HR_APP_EMPLOYEES</resourceUri></DataSource>
+    <DataSource id="DEPARTMENTS"><resourceUri>HR_APP_DEPARTMENTS</resourceUri></DataSource>
+    <DataSource id="POSITIONS"><resourceUri>HR_APP_POSITIONS</resourceUri></DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_Emp_Dept" cardinality="CN_N" joinType="leftOuter">
+      <viewAttributes>
+        <viewAttribute id="EMP_ID"/>
+        <viewAttribute id="EMPLOYEENUMBER"/>
+        <viewAttribute id="FIRSTNAME"/>
+        <viewAttribute id="LASTNAME"/>
+        <viewAttribute id="EMAIL"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="HIREDATE"/>
+        <viewAttribute id="DEPARTMENT_ID"/>
+        <viewAttribute id="POSITION_ID"/>
+        <viewAttribute id="ATTRITIONRISK"/>
+        <viewAttribute id="RISKLEVEL"/>
+        <viewAttribute id="DEPT_NAME"/>
+      </viewAttributes>
+      <input node="EMPLOYEES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMP_ID" source="ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMPLOYEENUMBER" source="EMPLOYEENUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRSTNAME" source="FIRSTNAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LASTNAME" source="LASTNAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMAIL" source="EMAIL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIREDATE" source="HIREDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPARTMENT_ID" source="DEPARTMENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSITION_ID" source="POSITION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTRITIONRISK" source="ATTRITIONRISK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RISKLEVEL" source="RISKLEVEL"/>
+      </input>
+      <input node="DEPARTMENTS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPARTMENT_ID" source="ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT_NAME" source="NAME"/>
+      </input>
+      <joinAttribute name="DEPARTMENT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_Position" cardinality="CN_N" joinType="leftOuter">
+      <viewAttributes>
+        <viewAttribute id="EMP_ID"/>
+        <viewAttribute id="EMPLOYEENUMBER"/>
+        <viewAttribute id="FIRSTNAME"/>
+        <viewAttribute id="LASTNAME"/>
+        <viewAttribute id="EMAIL"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="HIREDATE"/>
+        <viewAttribute id="DEPT_NAME"/>
+        <viewAttribute id="POSITION_ID"/>
+        <viewAttribute id="ATTRITIONRISK"/>
+        <viewAttribute id="RISKLEVEL"/>
+        <viewAttribute id="POS_TITLE"/>
+      </viewAttributes>
+      <input node="Join_Emp_Dept">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMP_ID" source="EMP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMPLOYEENUMBER" source="EMPLOYEENUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRSTNAME" source="FIRSTNAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LASTNAME" source="LASTNAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMAIL" source="EMAIL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIREDATE" source="HIREDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT_NAME" source="DEPT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSITION_ID" source="POSITION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTRITIONRISK" source="ATTRITIONRISK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RISKLEVEL" source="RISKLEVEL"/>
+      </input>
+      <input node="POSITIONS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSITION_ID" source="ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POS_TITLE" source="TITLE"/>
+      </input>
+      <joinAttribute name="POSITION_ID"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_Position">
+    <attributes>
+      <attribute id="EMP_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Çalışan ID"/>
+        <keyMapping columnObjectName="Join_Position" columnName="EMP_ID"/>
+      </attribute>
+      <attribute id="EMPLOYEENUMBER" order="2" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Sicil No"/>
+        <keyMapping columnObjectName="Join_Position" columnName="EMPLOYEENUMBER"/>
+      </attribute>
+      <attribute id="FIRSTNAME" order="3" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Ad"/>
+        <keyMapping columnObjectName="Join_Position" columnName="FIRSTNAME"/>
+      </attribute>
+      <attribute id="LASTNAME" order="4" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Soyad"/>
+        <keyMapping columnObjectName="Join_Position" columnName="LASTNAME"/>
+      </attribute>
+      <attribute id="EMAIL" order="5" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="E-posta"/>
+        <keyMapping columnObjectName="Join_Position" columnName="EMAIL"/>
+      </attribute>
+      <attribute id="STATUS" order="6" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Durum"/>
+        <keyMapping columnObjectName="Join_Position" columnName="STATUS"/>
+      </attribute>
+      <attribute id="HIREDATE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="İşe Giriş Tarihi"/>
+        <keyMapping columnObjectName="Join_Position" columnName="HIREDATE"/>
+      </attribute>
+      <attribute id="DEPT_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Departman"/>
+        <keyMapping columnObjectName="Join_Position" columnName="DEPT_NAME"/>
+      </attribute>
+      <attribute id="POS_TITLE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Pozisyon"/>
+        <keyMapping columnObjectName="Join_Position" columnName="POS_TITLE"/>
+      </attribute>
+      <attribute id="ATTRITIONRISK" order="10" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Ayrılma Riski"/>
+        <keyMapping columnObjectName="Join_Position" columnName="ATTRITIONRISK"/>
+      </attribute>
+      <attribute id="RISKLEVEL" order="11" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Risk Seviyesi"/>
+        <keyMapping columnObjectName="Join_Position" columnName="RISKLEVEL"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <baseMeasures/>
+    <calculatedMeasures/>
+  </logicalModel>
+</Calculation:scenario>

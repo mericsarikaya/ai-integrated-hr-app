@@ -25,7 +25,7 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: hr-app-auth
-      - name: hr-app-db
+      - name: hr-app-hdi
 
   - name: hr-app-db-deployer
     type: hdb
@@ -33,7 +33,7 @@ modules:
     parameters:
       buildpack: nodejs_buildpack
     requires:
-      - name: hr-app-db
+      - name: hr-app-hdi
   - name: hr-app
     type: approuter.nodejs
     path: app/router
@@ -73,7 +73,7 @@ resources:
             - https://*~{app-api/app-uri}/**
     requires:
       - name: app-api
-  - name: hr-app-db
+  - name: hr-app-hdi
     type: com.sap.xs.hdi-container
     parameters:
       service: hana

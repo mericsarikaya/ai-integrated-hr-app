@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.eml" id="CV_ATTRITION_RISK_DISTRIBUTION" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+  <descriptions defaultDescription="Ayrılma Riski Dağılımı"/>
+  <dataSources>
+    <DataSource id="EMPLOYEES"><resourceUri>HR_APP_EMPLOYEES</resourceUri></DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection">
+      <input node="EMPLOYEES"/>
+      <filter>&quot;STATUS&quot; = 'ACTIVE'</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection">
+    <attributes>
+      <attribute id="RISKLEVEL" order="1" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Risk Seviyesi"/>
+        <keyMapping columnObjectName="Projection" columnName="RISKLEVEL"/>
+      </attribute>
+      <attribute id="ATTRITIONRISK" order="2" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Risk Skoru"/>
+        <keyMapping columnObjectName="Projection" columnName="ATTRITIONRISK"/>
+      </attribute>
+      <attribute id="STATUS" order="3" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Durum"/>
+        <keyMapping columnObjectName="Projection" columnName="STATUS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <baseMeasures/>
+    <calculatedMeasures/>
+  </logicalModel>
+</Calculation:scenario>
