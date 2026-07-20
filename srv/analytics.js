@@ -1,8 +1,9 @@
-const cds = require('@sap/cds');
+import cds from '@sap/cds';
 
-module.exports = cds.service.impl(async function() {
-    
-    const { Employees, JobPostings, Candidates } = this.entities('hr.app');
+export default cds.service.impl(async function() {
+    const Employees = 'hr.app.Employees';
+    const JobPostings = 'hr.app.JobPostings';
+    const Candidates = 'hr.app.Candidates';
 
     // Dashboard'daki üst KPI kartlarını (Anahtar Performans Göstergeleri) doldurur
     this.on('getDashboardKPIs', async (req) => {

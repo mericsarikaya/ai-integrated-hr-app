@@ -32,4 +32,5 @@ service HRService @(path: '/hr') {
     action calculateAttritionRisk(employeeId: UUID)  returns String;
     action askHRBot(conversationId: String, question: String) returns String;
     action analyzeSurvey(surveyId: UUID)             returns String;
+    action uploadCVPDF(candidateId: UUID, pdfBase64: LargeString) returns String;
 }
