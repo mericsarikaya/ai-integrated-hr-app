@@ -2,35 +2,118 @@ using hr.app from '../db/schema';
 
 service HRService @(path: '/hr') {
 
-    // Çalışan Yönetimi
+    // ============================================================
+    // ÇALIŞAN YÖNETİMİ — Employee: READ, HRAdmin: FULL
+    // ============================================================
+
+    @(restrict: [
+        { grant: 'READ', to: ['Employee', 'HRAdmin'] },
+        { grant: '*',    to: 'HRAdmin' }
+    ])
     entity Employees          as projection on app.Employees;
+
+    @(restrict: [
+        { grant: 'READ', to: ['Employee', 'HRAdmin'] },
+        { grant: '*',    to: 'HRAdmin' }
+    ])
     entity Departments        as projection on app.Departments;
+
+    @(restrict: [
+        { grant: 'READ', to: ['Employee', 'HRAdmin'] },
+        { grant: '*',    to: 'HRAdmin' }
+    ])
     entity Positions          as projection on app.Positions;
+
+    @(restrict: [
+        { grant: 'READ', to: ['Employee', 'HRAdmin'] },
+        { grant: '*',    to: 'HRAdmin' }
+    ])
     entity Skills             as projection on app.Skills;
+
+    @(restrict: [
+        { grant: 'READ', to: ['Employee', 'HRAdmin'] },
+        { grant: '*',    to: 'HRAdmin' }
+    ])
     entity EmployeeSkills     as projection on app.EmployeeSkills;
 
-    // İşe Alım
+    // ============================================================
+    // İŞE ALIM — JobPostings: herkes READ, HRAdmin FULL
+    //             Candidates: sadece HRAdmin
+    // ============================================================
+
+    @(restrict: [
+        { grant: 'READ', to: ['Candidate', 'Employee', 'HRAdmin'] },
+        { grant: '*',    to: 'HRAdmin' }
+    ])
     entity JobPostings        as projection on app.JobPostings;
-    entity Candidates         as projection on app.Candidates;
+
+    @(requires: 'HRAdmin')
+    entity Candidates as projection on app.Candidates actions {
+        action analyzeCV() returns String;
+    };
+
+    @(requires: 'HRAdmin')
     entity CVAnalysisResults  as projection on app.CVAnalysisResults;
 
-    // Performans
+    // ============================================================
+    // PERFORMANS — Sadece HRAdmin
+    // ============================================================
+
+    @(requires: 'HRAdmin')
     entity PerformanceReviews as projection on app.PerformanceReviews;
+
+    @(requires: 'HRAdmin')
     entity Goals              as projection on app.Goals;
 
-    // Anketler
+    // ============================================================
+    // ANKETLER — Sadece HRAdmin
+    // ============================================================
+
+    @(requires: 'HRAdmin')
     entity Surveys            as projection on app.Surveys;
+
+    @(requires: 'HRAdmin')
     entity SurveyResponses    as projection on app.SurveyResponses;
 
-    // AI & Chatbot
+    // ============================================================
+    // AI & CHATBOT — Herkes erişebilir
+    // ============================================================
+
+    @(restrict: [
+        { grant: '*', to: ['Candidate', 'Employee', 'HRAdmin'] }
+    ])
     entity ChatMessages       as projection on app.ChatMessages;
+
+    @(requires: 'HRAdmin')
     entity AttritionRiskHistory as projection on app.AttritionRiskHistory;
+
+    @(restrict: [
+        { grant: 'READ', to: ['Candidate', 'Employee', 'HRAdmin'] },
+        { grant: '*',    to: 'HRAdmin' }
+    ])
     entity HRPolicies         as projection on app.HRPolicies;
 
-    // --- Custom Actions (AI) ---
-    action analyzeCV(candidateId: UUID)              returns String;
+    // ============================================================
+    // CUSTOM ACTIONS (AI) — Rol bazlı erişim
+    // ============================================================
+
+    @(requires: 'HRAdmin')
     action calculateAttritionRisk(employeeId: UUID)  returns String;
+
+    @(requires: ['Candidate', 'Employee', 'HRAdmin'])
     action askHRBot(conversationId: String, question: String) returns String;
+
+    @(requires: 'HRAdmin')
     action analyzeSurvey(surveyId: UUID)             returns String;
+
+    @(requires: 'HRAdmin')
     action uploadCVPDF(candidateId: UUID, pdfBase64: LargeString) returns String;
+
+   type UserInfo {
+        username: String;
+        role: String;
+    }
+    @(requires: 'authenticated-user')
+    function getMyUserInfo() returns UserInfo;
+
 }

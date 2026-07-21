@@ -43,7 +43,15 @@
             "name": "hr-app-hdi"
           }
         }
-      }
+      },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+        "aday":    { "password": "1", "roles": ["Candidate"] },
+        "calisan": { "password": "2", "roles": ["Employee"] },
+        "ik":      { "password": "3", "roles": ["HRAdmin"] }
+  }
+}
     }
   }
 }

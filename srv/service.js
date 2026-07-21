@@ -75,8 +75,9 @@ export default cds.service.impl(async function() {
     });
     
     // AI ile CV Analizi
-    this.on('analyzeCV', async (req) => {
-        const { candidateId } = req.data;
+    this.on('analyzeCV','Candidates', async (req) => {
+        req.notify('CV analizi başlatıldı');
+        const candidateId = req.params[0]?.ID || req.params[0];
         const tx = cds.transaction(req);
         
         try {
@@ -209,4 +210,18 @@ export default cds.service.impl(async function() {
     this.on('analyzeSurvey', async (req) => {
          return "Anket duygu analizi tamamlandı (Mock).";
     });
+
+    // KULLANICI BİLGİSİNİ VE ROLÜNÜ DÖNEN FONKSİYON
+    this.on('getMyUserInfo', (req) => {
+        let userRole = 'Candidate'; // Varsayılan aday
+        
+        if (req.user.is('HRAdmin')) userRole = 'HRAdmin';
+        else if (req.user.is('Employee')) userRole = 'Employee';
+        
+        return {
+            username: req.user.id,
+            role: userRole
+        };
+    });
+
 });

@@ -31,6 +31,13 @@ annotate service.Candidates with @(
                 Target: 'cvAnalysis/@UI.FieldGroup#AIAnalysis'
             }
         ],
+        Identification: [
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.Candidates.analyzeCV',
+                Label: '🧠 Yapay Zekaya CV Analiz Ettir'
+            }
+        ],
         FieldGroup#CandidateInfo: {
             Data: [
                 { Value: firstName },
@@ -56,3 +63,4 @@ annotate service.CVAnalysisResults with @(
         }
     }
 );
+
