@@ -24,12 +24,72 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 4rem 2rem;
+            padding: 2rem 2rem 4rem;
         }
-        .header { text-align: center; margin-bottom: 4rem; animation: fadeInDown 0.8s ease; }
-        .header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; text-shadow: var(--accent-glow); }
-        .header p { color: #94a3b8; font-size: 1.1rem; max-width: 600px; }
-        
+
+        /* === Üst Bar === */
+        .top-bar {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            animation: fadeInDown 0.6s ease;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .user-info i { color: var(--accent); font-size: 1.2rem; }
+        .user-info .user-name { font-weight: 600; font-size: 0.9rem; }
+        .user-info .user-role {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            background: rgba(59, 130, 246, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .header { text-align: center; margin-bottom: 3rem; animation: fadeInDown 0.8s ease; }
+        .header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: var(--accent-glow); }
+        .header .welcome-msg { color: #94a3b8; font-size: 1.1rem; max-width: 600px; }
+        .header .role-indicator {
+            display: inline-block;
+            margin-top: 0.75rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .role-indicator.Candidate { background: rgba(234, 179, 8, 0.15); color: #fbbf24; border: 1px solid rgba(234, 179, 8, 0.3); }
+        .role-indicator.Employee  { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .role-indicator.HRAdmin   { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -53,7 +113,12 @@
             transition: all 0.3s ease;
             cursor: pointer;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.6s ease both;
         }
+        .tile:nth-child(1) { animation-delay: 0.1s; }
+        .tile:nth-child(2) { animation-delay: 0.2s; }
+        .tile:nth-child(3) { animation-delay: 0.3s; }
+        .tile:nth-child(4) { animation-delay: 0.4s; }
 
         .tile:hover {
             transform: translateY(-10px);
@@ -65,43 +130,127 @@
         .tile h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
         .tile p { font-size: 0.9rem; color: #94a3b8; }
 
+        /* Gizli tile */
+        .tile.hidden { display: none; }
+
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>HR Hub <span></span></h1>
-        <p>Yapay Zeka Destekli İnsan Kaynakları ve Yetenek Yönetim Sistemi. Lütfen erişmek istediğiniz modülü seçin.</p>
+    <!-- Üst Bar: Kullanıcı Bilgisi + Çıkış -->
+    <div class="top-bar">
+        <div class="user-info">
+            <i class="ri-user-3-line"></i>
+            <span class="user-name" id="displayName">—</span>
+            <span class="user-role" id="displayRole">—</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+            <i class="ri-logout-box-r-line"></i>
+            Çıkış Yap
+        </button>
     </div>
 
-    <div class="grid-container">
-        
-        <!-- Fiori Adaylar (Candidates) Ekranına Gider -->
-        <a href="http://localhost:4004/$fiori-preview/HRService/Candidates#preview-app&/?sap-iapp-state=TASPOC5WC6TL4WIOWI2F9K29C9RNAYYMY8YJ5EUAE" class="tile">
+    <div class="header">
+        <h1>HR Hub</h1>
+        <p class="welcome-msg" id="welcomeMsg">Yapay Zeka Destekli İnsan Kaynakları ve Yetenek Yönetim Sistemi.</p>
+        <span class="role-indicator" id="roleIndicator"></span>
+    </div>
+
+    <div class="grid-container" id="tilesContainer">
+
+        <!-- TILE: İşe Alım Yönetimi — Sadece HRAdmin -->
+        <a href="http://localhost:4004/$fiori-preview/HRService/Candidates#preview-app&/?sap-iapp-state=TASPOC5WC6TL4WIOWI2F9K29C9RNAYYMY8YJ5EUAE" class="tile" id="tile-recruitment"
+           data-roles="HRAdmin">
             <i class="ri-user-search-line"></i>
             <h3>İşe Alım Yönetimi</h3>
             <p>Adayları listele, detayları gör ve PDF yükleyerek Yapay Zeka analizini başlat.</p>
         </a>
 
-        <!-- Fiori Çalışanlar (Employees) Ekranına Gider -->
-        <a href="http://localhost:4004/$fiori-preview/HRService/Employees#preview-app&/?sap-iapp-state=TASO5ZX2JBLM2H68E850Y2WL0IAZM7MNAYVROLH8V" class="tile">
+        <!-- TILE: Çalışan Rehberi — Employee + HRAdmin -->
+        <a href="http://localhost:4004/$fiori-preview/HRService/Employees#preview-app&/?sap-iapp-state=TASO5ZX2JBLM2H68E850Y2WL0IAZM7MNAYVROLH8V" class="tile" id="tile-employees"
+           data-roles="Employee,HRAdmin">
             <i class="ri-team-line"></i>
             <h3>Çalışan Rehberi</h3>
             <p>Şirket içi personeli yönet, performans ve ayrılma riski raporlarını incele.</p>
         </a>
 
-        <!-- Chatbot Uygulamasına Gider -->
-        <a href="/chatbot.html" class="tile" style="--accent: #10b981; --accent-glow: 0 0 20px rgba(16, 185, 129, 0.4);">
+        <!-- TILE: İş İlanları — Herkes (Candidate + Employee + HRAdmin) -->
+        <a href="http://localhost:4004/$fiori-preview/HRService/Employees#preview-app&/?sap-iapp-state=TASO5ZX2JBLM2H68E850Y2WL0IAZM7MNAYVROLH8V" class="tile" id="tile-jobs"
+           data-roles="Candidate,Employee,HRAdmin">
+            <i class="ri-briefcase-line"></i>
+            <h3>İş İlanları</h3>
+            <p>Açık pozisyonları incele ve başvur.</p>
+        </a>
+
+        <!-- TILE: HR Yapay Zeka Asistanı — Herkes -->
+        <a href="/chatbot.html" class="tile" id="tile-chatbot"
+           data-roles="Candidate,Employee,HRAdmin"
+           style="--accent: #10b981; --accent-glow: 0 0 20px rgba(16, 185, 129, 0.4);">
             <i class="ri-robot-2-line"></i>
             <h3>HR Yapay Zeka Asistanı</h3>
             <p>İzinler, maaşlar ve şirket prosedürleri hakkında anında bilgi al.</p>
         </a>
 
     </div>
+
+    <script>
+        async function initApp() {
+        try {
+            // Sunucudan (Fiori'nin de kullandığı asıl backend'den) kullanıcı bilgisini çek
+            const res = await fetch('/odata/v4/hr/getMyUserInfo()');
+            if (!res.ok) throw new Error('Yetki doğrulanamadı');
+            
+            const data = await res.json();
+            const user = data.value;
+
+            // 1. Üst barı doldur
+            document.getElementById('displayName').textContent = user.username;
+            document.getElementById('displayRole').textContent = user.role;
+
+            // 2. Karşılama mesajı ve Rozet
+            const roleIndicator = document.getElementById('roleIndicator');
+            roleIndicator.textContent = user.role;
+            roleIndicator.className = 'role-indicator ' + user.role;
+
+            const messages = {
+                'Candidate': 'İş ilanlarını inceleyin ve yapay zeka asistanımızdan bilgi alın.',
+                'Employee':  'Çalışan rehberini görüntüleyebilir ve AI asistanını kullanabilirsiniz.',
+                'HRAdmin':   'Tüm modüllere tam erişiminiz var. İyi çalışmalar!'
+            };
+            document.getElementById('welcomeMsg').textContent = messages[user.role] || '';
+
+            // 3. Yetkisi olmayan menüleri (Tile) gizle
+            const tiles = document.querySelectorAll('.tile[data-roles]');
+            tiles.forEach(tile => {
+                const allowedRoles = tile.getAttribute('data-roles').split(',');
+                if (!allowedRoles.includes(user.role)) {
+                    tile.classList.add('hidden');
+                }
+            });
+        } catch (err) {
+            console.error("Yükleme hatası:", err);
+        }
+    }
+
+    // Çıkış Yap (Tarayıcının şifre önbelleğini temizleme hilesi)
+    function logout() {
+        fetch('/odata/v4/hr/getMyUserInfo()', {
+            headers: { 'Authorization': 'Basic ' + btoa('logout:logout') }
+        }).then(() => {
+            window.location.href = '/';
+        });
+    }
+
+    // Uygulamayı Başlat
+    initApp();
+    </script>
 
 </body>
 </html>

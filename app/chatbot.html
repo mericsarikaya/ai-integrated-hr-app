@@ -7,7 +7,22 @@
     <style>
         body { font-family: 'Inter', sans-serif; background: #f3f4f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .chat-container { width: 400px; height: 600px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
-        .header { background: #0a426e; color: white; padding: 1rem; text-align: center; font-weight: 600; }
+        .header {
+            background: #0a426e; color: white; padding: 1rem; text-align: center; font-weight: 600;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header .title { flex: 1; text-align: center; }
+        .header .back-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+        .header .back-btn:hover { background: rgba(255,255,255,0.3); }
         .messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
         .msg { padding: 10px 15px; border-radius: 8px; max-width: 80%; font-size: 0.9rem; line-height: 1.4; }
         .bot { background: #e2e8f0; align-self: flex-start; color: #1e293b; }
@@ -19,7 +34,11 @@
 </head>
 <body>
     <div class="chat-container">
-        <div class="header">İK Yapay Zeka Asistanı</div>
+        <div class="header">
+            <button class="back-btn" onclick="window.location.href='/index.html'">← Geri</button>
+            <span class="title">İK Yapay Zeka Asistanı</span>
+            <div style="width: 60px;"></div>
+        </div>
         <div class="messages" id="messages">
             <div class="msg bot">Merhaba! İzin hakları, prosedürler veya bordro hakkında bana sorular sorabilirsiniz. Size nasıl yardımcı olabilirim?</div>
         </div>
@@ -30,6 +49,7 @@
     </div>
 
     <script>
+
         async function sendMessage() {
             const input = document.getElementById('input');
             const messages = document.getElementById('messages');
@@ -48,7 +68,10 @@
             try {
                 const response = await fetch('/hr/askHRBot', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + user.credentials
+                    },
                     body: JSON.stringify({ conversationId: "session1", question: text })
                 });
                 const data = await response.json();
