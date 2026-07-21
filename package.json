@@ -22,8 +22,11 @@
   "cds": {
     "requires": {
       "db": {
-        "kind": "sql"
-      },
+          "kind": "sqlite",
+          "credentials": {
+            "url": "hr-app.db"
+          }
+          },
       "[production]": {
         "auth": "xsuaa",
         "db": {
