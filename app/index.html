@@ -204,11 +204,11 @@
         async function initApp() {
         try {
             // Sunucudan (Fiori'nin de kullandığı asıl backend'den) kullanıcı bilgisini çek
-            const res = await fetch('/odata/v4/hr/getMyUserInfo()');
+            const res = await fetch('/hr/getMyUserInfo()');
             if (!res.ok) throw new Error('Yetki doğrulanamadı');
             
             const data = await res.json();
-            const user = data.value;
+            const user = data.value || data;
 
             // 1. Üst barı doldur
             document.getElementById('displayName').textContent = user.username;
@@ -241,11 +241,8 @@
 
     // Çıkış Yap (Tarayıcının şifre önbelleğini temizleme hilesi)
     function logout() {
-        fetch('/odata/v4/hr/getMyUserInfo()', {
-            headers: { 'Authorization': 'Basic ' + btoa('logout:logout') }
-        }).then(() => {
-            window.location.href = '/';
-        });
+        // Özel çıkış rotamıza yönlendir
+        window.location.href = '/logout';
     }
 
     // Uygulamayı Başlat
