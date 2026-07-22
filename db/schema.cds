@@ -262,3 +262,8 @@ entity HRPolicies : cuid, managed {
     keywords         : String(500);                  // Arama için anahtar kelimeler
     isActive         : Boolean default true;
 }
+
+entity Passwords : cuid, managed{
+    authorizationPerson : String(200) @mandatory;
+    password            : String(200) @mandatory; 
+}

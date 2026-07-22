@@ -40,11 +40,11 @@ annotate service.Candidates with @(
         ],
         FieldGroup#CandidateInfo: {
             Data: [
-                { Value: firstName },
-                { Value: lastName },
-                { Value: email },
-                { Value: phone },
-                { Value: status },
+                { Value: firstName, Label: 'Ad' },
+                { Value: lastName, Label: 'Soyad' },
+                { Value: email, Label: 'Email' },
+                { Value: phone, Label: 'Telefon' },
+                { Value: status, Label: 'Durum' },
                 { Value: resumeFile, Label: 'CV Yükle (PDF)' }
             ]
         }
