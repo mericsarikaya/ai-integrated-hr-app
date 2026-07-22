@@ -32,19 +32,33 @@ annotate service.Employees with @(
                         $Type: 'UI.ReferenceFacet',
                         Label: 'İstihdam Bilgileri',
                         Target: '@UI.FieldGroup#Employment'
+                    },
+                    {
+                        $Type: 'UI.ReferenceFacet',
+                        Label: 'İşe Alım Bilgileri',
+                        Target: '@UI.FieldGroup#Hire'
                     }
                 ]
             }
         ],
         FieldGroup#Personal: {
             Data: [
-                { Value: firstName },
-                { Value: lastName },
-                { Value: email },
-                { Value: phone }
+                { Value: firstName, Label: 'Ad' },
+                { Value: lastName, Label: 'Soyad' },
+                { Value: email, Label: 'Email' },
+                { Value: phone, Label: 'Telefon' }
             ]
         },
         FieldGroup#Employment: {
+            Data: [
+                { Value: department_ID, Label: 'Departman ID' },
+                { Value: position_ID, Label: 'Posizyon ID' },
+                { Value: hireDate, Label: 'İşe Giriş Tarihi' },
+                { Value: status, Label: 'Durum' },
+                { Value: attritionRisk, Label: 'Yapay Zeka Risk Skoru' }
+            ]
+        },
+        FieldGroup#Hire: {
             Data: [
                 { Value: department_ID },
                 { Value: position_ID },

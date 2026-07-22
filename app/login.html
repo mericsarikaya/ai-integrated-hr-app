@@ -281,7 +281,7 @@
                         <span class="role-badge hradmin">İK Çalışanı</span>
                         <div class="hint-info">
                             <span class="hint-user">ik</span>
-                            <span class="hint-pass">şifre: 3</span>
+                            <span class="hint-pass">şifre: 123456</span>
                         </div>
                     </div>
                 </div>
@@ -290,8 +290,8 @@
     </div>
 
     <script>
-        // Eğer zaten giriş yapılmışsa ana sayfaya yönlendir
-if (sessionStorage.getItem('hr_user')) {
+// Eğer zaten giriş yapılmışsa ana sayfaya yönlendir
+if (document.cookie.includes('hr_session=')) {
     window.location.href = '/index.html';
 }
 
@@ -343,7 +343,9 @@ async function handleLogin(e) {
                 credentials: credentials
             }));
 
+            document.cookie = `hr_session=${credentials}; path=/; max-age=86400`;
             window.location.href = '/index.html';
+
         } else if (response.status === 401 || response.status === 403) {
             errorText.textContent = 'Kullanıcı adı veya şifre hatalı. (401 Unauthorized)';
             errorMsg.classList.add('show');

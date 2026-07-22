@@ -239,11 +239,13 @@
         }
     }
 
-    // Çıkış Yap (Tarayıcının şifre önbelleğini temizleme hilesi)
-    function logout() {
-        // Özel çıkış rotamıza yönlendir
-        window.location.href = '/logout';
-    }
+function logout() {
+    // 1. Tarayıcıdaki bileti (çerezi) anında çöpe at
+    document.cookie = "hr_session=; path=/; max-age=0";
+    
+    // 2. Kullanıcıyı direkt login.html sayfasına fırlat
+    window.location.href = '/login.html';
+}
 
     // Uygulamayı Başlat
     initApp();
