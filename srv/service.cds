@@ -41,13 +41,35 @@ service HRService @(path: '/hr') {
     //             Candidates: sadece HRAdmin
     // ============================================================
 
+    @cds.redirection.target
     @(restrict: [
         { grant: 'READ', to: ['Candidate', 'Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
     ])
-    entity JobPostings        as projection on app.JobPostings;
+    entity JobPostings as projection on app.JobPostings;
+    
+    @readonly
+    @(requires: ['Candidate', 'Employee', 'HRAdmin'])
+    @(Capabilities: {
+        InsertRestrictions.Insertable: false,
+        UpdateRestrictions.Updatable:  false,
+        DeleteRestrictions.Deletable:  false
+    })
+    entity PublicJobPostings as projection on app.JobPostings excluding { candidates } actions {
+        action applyToJob(
+            firstName : String(100),
+            lastName  : String(100),
+            email     : String(200),
+            phone     : String(20)
+        ) returns String;
+    };
 
-    @(requires: 'HRAdmin')
+
+
+    @(restrict: [
+        { grant: ['CREATE', 'READ'], to: ['Candidate', 'Employee'] },
+        { grant: '*', to: 'HRAdmin' }
+    ])
     entity Candidates as projection on app.Candidates actions {
         action analyzeCV() returns String;
     };

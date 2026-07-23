@@ -166,11 +166,18 @@
     <div class="grid-container" id="tilesContainer">
 
         <!-- TILE: İşe Alım Yönetimi — Sadece HRAdmin -->
-        <a href="http://localhost:4004/$fiori-preview/HRService/Candidates#preview-app&/?sap-iapp-state=TASPOC5WC6TL4WIOWI2F9K29C9RNAYYMY8YJ5EUAE" class="tile" id="tile-recruitment"
+        <!-- <a href="http://localhost:4004/$fiori-preview/HRService/Candidates#preview-app&/?sap-iapp-state=TASPOC5WC6TL4WIOWI2F9K29C9RNAYYMY8YJ5EUAE" class="tile" id="tile-recruitment"
            data-roles="HRAdmin">
             <i class="ri-user-search-line"></i>
             <h3>İşe Alım Yönetimi</h3>
             <p>Adayları listele, detayları gör ve PDF yükleyerek Yapay Zeka analizini başlat.</p>
+        </a> -->
+        <!-- TILE: İş İlanı Yönetimi — Sadece HRAdmin -->
+        <a href="/$fiori-preview/HRService/JobPostings#preview-app" class="tile" id="tile-jobadmin"
+           data-roles="HRAdmin">
+            <i class="ri-file-list-3-line"></i>
+            <h3>İş İlanı Yönetimi</h3>
+            <p>İlan oluştur, düzenle, sil ve gelen başvuruları incele.</p>
         </a>
 
         <!-- TILE: Çalışan Rehberi — Employee + HRAdmin -->
@@ -182,8 +189,8 @@
         </a>
 
         <!-- TILE: İş İlanları — Herkes (Candidate + Employee + HRAdmin) -->
-        <a href="http://localhost:4004/$fiori-preview/HRService/Employees#preview-app&/?sap-iapp-state=TASO5ZX2JBLM2H68E850Y2WL0IAZM7MNAYVROLH8V" class="tile" id="tile-jobs"
-           data-roles="Candidate,Employee,HRAdmin">
+        <a href="/$fiori-preview/HRService/PublicJobPostings#preview-app" class="tile" id="tile-jobs"
+           data-roles="Candidate">
             <i class="ri-briefcase-line"></i>
             <h3>İş İlanları</h3>
             <p>Açık pozisyonları incele ve başvur.</p>
