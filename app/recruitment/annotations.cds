@@ -2,6 +2,8 @@ using HRService as service from '../../srv/service';
 
 annotate service.Candidates with @odata.draft.enabled;
 annotate service.Employees with @odata.draft.enabled;
+annotate service.JobPostings with @odata.draft.enabled;
+
 
 annotate service.Candidates with @(
     UI: {
@@ -45,6 +47,7 @@ annotate service.Candidates with @(
                 { Value: email, Label: 'Email' },
                 { Value: phone, Label: 'Telefon' },
                 { Value: status, Label: 'Durum' },
+                { Value: jobPosting.title, Label: 'Başvurulan Pozisyon' },
                 { Value: resumeFile, Label: 'CV Yükle (PDF)' }
             ]
         }
@@ -63,4 +66,68 @@ annotate service.CVAnalysisResults with @(
         }
     }
 );
+
+// İK İŞ İLANI YÖNETİMİ (Tam Yetki: Oluştur / Düzenle / Sil)
+annotate service.JobPostings with @(
+    UI: {
+        HeaderInfo: {
+            TypeName: 'İş İlanı',
+            TypeNamePlural: 'İş İlanları',
+            Title: { Value: title },
+            Description: { Value: status }
+        },
+        SelectionFields: [ status, department_ID, position_ID ],
+        LineItem: [
+            { Value: title, Label: 'İlan Başlığı' },
+            { Value: status, Label: 'Durum' },
+            { Value: openDate, Label: 'Açılış Tarihi' },
+            { Value: closeDate, Label: 'Kapanış Tarihi' },
+            { Value: vacancies, Label: 'Kontenjan' }
+        ],
+        Facets: [
+            {
+                $Type: 'UI.ReferenceFacet',
+                Label: 'İlan Detayları',
+                Target: '@UI.FieldGroup#AdminPostingInfo'
+            },
+            {
+                $Type: 'UI.ReferenceFacet',
+                Label: 'Bu İlana Gelen Başvurular',
+                Target: 'candidates/@UI.LineItem'
+            }
+        ],
+        FieldGroup#AdminPostingInfo: {
+            Data: [
+                { Value: title, Label: 'İlan Başlığı' },
+                { Value: description, Label: 'Genel Açıklama' },
+                { Value: requirements, Label: 'Gereksinimler' },
+                { Value: status, Label: 'Durum' },
+                { Value: openDate, Label: 'Açılış Tarihi' },
+                { Value: closeDate, Label: 'Kapanış Tarihi' },
+                { Value: vacancies, Label: 'Alınacak Kişi Sayısı' },
+                { Value: department_ID, Label: 'Departman' },
+                { Value: position_ID, Label: 'Pozisyon' }
+            ]
+        }
+    }
+);
+
+annotate service.JobPostings {
+    department @(Common.ValueList: {
+        CollectionPath: 'Departments',
+        Label: 'Departman',
+        Parameters: [
+            { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: department_ID, ValueListProperty: 'ID' },
+            { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' }
+        ]
+    });
+    position @(Common.ValueList: {
+        CollectionPath: 'Positions',
+        Label: 'Pozisyon',
+        Parameters: [
+            { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: position_ID, ValueListProperty: 'ID' },
+            { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'title' }
+        ]
+    });
+};
 

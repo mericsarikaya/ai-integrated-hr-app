@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Hub | Kayıt Ol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981; /* Kayıt için uyumlu yeşil ton */
+            --accent-hover: #059669;
+            --accent-glow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.15), transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .login-wrapper { width: 100%; max-width: 440px; animation: fadeInUp 0.8s ease; }
+        .login-header { text-align: center; margin-bottom: 2.5rem; }
+        .login-header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: var(--accent-glow); }
+        .login-header p { color: var(--text-muted); font-size: 1rem; }
+        .login-card { background: var(--card-bg); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group .input-wrapper { position: relative; }
+        .form-group .input-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem; }
+        .form-group input { width: 100%; padding: 12px 14px 12px 44px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: var(--text-main); font-size: 1rem; outline: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .form-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+        
+        .login-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .login-btn:hover { background: var(--accent-hover); box-shadow: var(--accent-glow); transform: translateY(-2px); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .message-box { display: none; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1.5rem; align-items: center; gap: 8px; }
+        .message-box.error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
+        .message-box.success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7; }
+        .message-box.show { display: flex; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="login-header">
+            <h1>Kayıt Ol</h1>
+            <p>Sisteme dahil olmak için hesap oluşturun</p>
+        </div>
+
+        <div class="login-card">
+            <!-- Hata & Başarı Mesajları -->
+            <div class="message-box error" id="errorMsg">
+                <i class="ri-error-warning-line"></i>
+                <span id="errorText"></span>
+            </div>
+            <div class="message-box success" id="successMsg">
+                <i class="ri-check-line"></i>
+                <span id="successText"></span>
+            </div>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <div class="input-wrapper">
+                        <i class="ri-user-line"></i>
+                        <input type="text" id="username" placeholder="Kullanıcı adınızı belirleyin" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <div class="input-wrapper">
+                        <i class="ri-lock-line"></i>
+                        <input type="password" id="password" placeholder="Şifrenizi belirleyin" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn" id="registerBtn">
+                    Kayıt Ol
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <span style="color: var(--text-muted); font-size: 0.9rem;">Zaten hesabınız var mı? </span>
+                <a href="/login.html" style="color: #3b82f6; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: color 0.3s ease;">Giriş Yap</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function handleRegister(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const btn = document.getElementById('registerBtn');
+            const errorMsg = document.getElementById('errorMsg');
+            const errorText = document.getElementById('errorText');
+            const successMsg = document.getElementById('successMsg');
+            const successText = document.getElementById('successText');
+
+            if (!username || !password) return;
+
+            btn.disabled = true;
+            errorMsg.classList.remove('show');
+            successMsg.classList.remove('show');
+
+            try {
+                // Adım 1'de oluşturduğumuz yeni server.js endpoint'ine istek atıyoruz
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    successText.textContent = 'Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...';
+                    successMsg.classList.add('show');
+                    document.getElementById('registerForm').reset();
+                    
+                    // Başarılı olursa 2 saniye sonra login sayfasına gönder
+                    setTimeout(() => {
+                        window.location.href = '/login.html';
+                    }, 2000);
+                } else {
+                    const errMessage = await response.text();
+                    errorText.textContent = errMessage || 'Kayıt olurken bir hata oluştu.';
+                    errorMsg.classList.add('show');
+                }
+            } catch (err) {
+                console.error("Kayıt Hatası:", err);
+                errorText.textContent = 'Bağlantı Hatası: ' + err.message;
+                errorMsg.classList.add('show');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

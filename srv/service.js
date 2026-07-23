@@ -8,7 +8,7 @@ const pdfParse = require('pdf-parse');
 export default cds.service.impl(async function() {
     
     // Entity referansları
-    const { Employees, Candidates, JobPostings, ChatMessages, CVAnalysisResults, HRPolicies } = this.entities;
+    const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies } = this.entities;
 
     // ============================================================
     // 1. EVENT HANDLERS (VALIDASYONLAR & İŞ KURALLARI)
@@ -210,6 +210,40 @@ export default cds.service.impl(async function() {
     this.on('analyzeSurvey', async (req) => {
          return "Anket duygu analizi tamamlandı (Mock).";
     });
+
+        this.on('applyToJob', 'PublicJobPostings', async (req) => {
+        const jobPostingId = req.params[0]?.ID || req.params[0];
+        const { firstName, lastName, email, phone } = req.data;
+        const tx = cds.transaction(req);
+        try {
+            // Aynı kişi aynı ilana iki kez başvurmasın
+            const existing = await tx.run(
+                SELECT.one.from(Candidates).where({ email: email, jobPosting_ID: jobPostingId })
+            );
+            if (existing) {
+                return req.error(409, 'Bu e-posta adresiyle bu ilana zaten başvuru yapılmış.');
+            }
+            // Adayı Candidates tablosuna ekle
+            await tx.run(
+                INSERT.into(Candidates).entries({
+                    firstName:       firstName,
+                    lastName:        lastName,
+                    email:           email,
+                    phone:           phone,
+                    jobPosting_ID:   jobPostingId,
+                    applicationDate: new Date().toISOString().split('T')[0],
+                    status:          'APPLIED'
+                })
+            );
+            return `Başvurunuz başarıyla alındı! Teşekkürler, ${firstName}.`;
+        } catch (error) {
+            if (error.code === 409) throw error;
+            req.error(500, `Başvuru sırasında hata: ${error.message}`);
+        }
+    });
+
+
+
 
     // KULLANICI BİLGİSİNİ VE ROLÜNÜ DÖNEN FONKSİYON
     this.on('getMyUserInfo', (req) => {
