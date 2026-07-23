@@ -101,7 +101,8 @@ export default cds.service.impl(async function() {
                 ADAYIN CV METNİ:
                 ${candidate.resumeText}
                 
-                Lütfen adayın bu ilana uygunluğunu analiz et ve bana AŞAĞIDAKİ JSON FORMATINDA cevap dön. (Sadece JSON dön, dışına başka bir metin yazma).
+                Lütfen adayın bu ilana uygunluğunu objektif bir şekilde analiz et asla iyimser veya kötümser olma neyse o olsun. 
+                Pozisyona uygunluğuna, tecrübesine, aldığı eğitimlere kısacası her şeye bak ve bana AŞAĞIDAKİ JSON FORMATINDA cevap dön. (Sadece JSON dön, dışına başka bir metin yazma).
                 
                 {
                   "overallScore": 85,
