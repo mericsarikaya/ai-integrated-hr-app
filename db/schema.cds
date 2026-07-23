@@ -22,9 +22,7 @@ type SurveyStatus     : String(20) enum { DRAFT; ACTIVE; CLOSED; }
 
 entity Departments : cuid, managed {
     name          : String(100) @mandatory;
-    description   : String(500);
     costCenter    : String(20);
-    headCount     : Integer default 0;
     manager       : Association to Employees;
     employees     : Composition of many Employees on employees.department = $self;
     positions     : Composition of many Positions on positions.department = $self;
