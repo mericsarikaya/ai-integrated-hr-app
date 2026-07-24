@@ -1,0 +1,11 @@
+ID,survey_ID,employee_ID,rating,openEndedAnswer,submittedAt,sentiment,sentimentScore,createdAt,modifiedAt
+sr001,sv001,e003,4,"Genel olarak çalışma ortamından memnunum. Teknik ekip çok destekleyici. Ancak maaş artışları enflasyonun gerisinde kalıyor.",2026-02-01T10:00:00Z,POSITIVE,0.6,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr002,sv001,e004,3,"Yeni başladığım için adapte olmaya çalışıyorum. Mentorluk programı çok faydalı ama iş yükü bazen çok ağır oluyor.",2026-02-03T11:00:00Z,NEUTRAL,0.1,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr003,sv001,e008,2,"Kariyer gelişim fırsatları çok sınırlı. Terfi kriterleri belirsiz. Yönetimden yeterli geri bildirim alamıyorum.",2026-02-02T09:00:00Z,NEGATIVE,-0.7,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr004,sv001,e014,1,"Satış hedefleri gerçekçi değil. Komisyon sistemi adil değil. Motivasyonum çok düşük. İş değiştirmeyi düşünüyorum.",2026-02-05T14:00:00Z,NEGATIVE,-0.9,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr005,sv001,e023,5,"Şirkette çalışmaktan çok memnunum. Projeler ilgi çekici ve teknoloji stack güncel. Yönetim destekleyici.",2026-02-01T08:00:00Z,POSITIVE,0.95,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr006,sv001,e017,2,"Son zamanlarda çok stresli bir ortam var. Satış baskısı artıyor ama destek azalıyor. Tükenmişlik hissediyorum.",2026-02-04T16:00:00Z,NEGATIVE,-0.8,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr007,sv002,e003,4,"Hibrit model benim için çok iyi çalışıyor. Haftada 2 gün ofis 3 gün evden ideal denge.",2026-03-10T10:00:00Z,POSITIVE,0.7,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr008,sv002,e011,3,"Evden çalışırken odaklanmakta zorlanıyorum. Ofisteki sosyal etkileşimi özlüyorum.",2026-03-12T11:00:00Z,NEUTRAL,-0.1,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr009,sv002,e030,5,"Uzaktan çalışma benim için harika. İş-yaşam dengesi çok iyileşti. Daha verimli çalışıyorum.",2026-03-08T09:00:00Z,POSITIVE,0.9,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+sr010,sv002,e039,2,"İnternet altyapısı evde yetersiz. Şirket ekipman desteği sağlamıyor. İletişim sorunları yaşıyoruz.",2026-03-15T13:00:00Z,NEGATIVE,-0.6,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z

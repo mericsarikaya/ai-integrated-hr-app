@@ -1,6 +1,5 @@
 using HRService as service from '../../srv/service';
 
-annotate service.Candidates with @odata.draft.enabled;
 annotate service.Employees with @odata.draft.enabled;
 annotate service.JobPostings with @odata.draft.enabled;
 

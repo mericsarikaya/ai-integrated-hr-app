@@ -60,11 +60,9 @@ service HRService @(path: '/hr') {
             firstName : String(100),
             lastName  : String(100),
             email     : String(200),
-            phone     : String(20)
+            phone     : String(20), 
         ) returns String;
     };
-
-
 
     @(restrict: [
         { grant: ['CREATE', 'READ'], to: ['Candidate', 'Employee'] },

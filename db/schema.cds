@@ -24,8 +24,8 @@ entity Departments : cuid, managed {
     name          : String(100) @mandatory;
     costCenter    : String(20);
     manager       : Association to Employees;
-    employees     : Composition of many Employees on employees.department = $self;
-    positions     : Composition of many Positions on positions.department = $self;
+    employees     : Association to  many Employees on employees.department = $self;
+    positions     : Association to many Positions on positions.department = $self;
 }
 
 // ============================================================
@@ -41,7 +41,7 @@ entity Positions : cuid, managed {
     isActive      : Boolean default true;
     department    : Association to Departments;
     employees     : Association to many Employees on employees.position = $self;
-    jobPostings   : Composition of many JobPostings on jobPostings.position = $self;
+    jobPostings   : Association to many JobPostings on jobPostings.position = $self;
 }
 
 // ============================================================
@@ -111,7 +111,7 @@ entity JobPostings : cuid, managed {
     vacancies        : Integer default 1;
     position         : Association to Positions;
     department       : Association to Departments;
-    candidates       : Association to many Candidates on candidates.jobPosting = $self;
+    candidates       : Composition of  many Candidates on candidates.jobPosting = $self;
 }
 
 // ============================================================

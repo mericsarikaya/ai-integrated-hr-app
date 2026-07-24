@@ -5,7 +5,7 @@ annotate service.Employees with @(
         HeaderInfo: {
             TypeName: 'Çalışan',
             TypeNamePlural: 'Çalışanlar',
-            Title: { Value: firstName },
+            Title: { Value: firstName},
             Description: { Value: lastName }
         },
         SelectionFields: [ department_ID, status, attritionRisk ],
@@ -38,9 +38,10 @@ annotate service.Employees with @(
                         Label: 'İşe Alım Bilgileri',
                         Target: '@UI.FieldGroup#Hire'
                     }
-                ]
+                ],
             }
         ],
+        
         FieldGroup#Personal: {
             Data: [
                 { Value: firstName, Label: 'Ad' },
@@ -51,8 +52,8 @@ annotate service.Employees with @(
         },
         FieldGroup#Employment: {
             Data: [
-                { Value: department_ID, Label: 'Departman ID' },
-                { Value: position_ID, Label: 'Posizyon ID' },
+                { Value: department.name, Label: 'Departman' },
+                { Value: position.title, Label: 'Posizyon' },
                 { Value: hireDate, Label: 'İşe Giriş Tarihi' },
                 { Value: status, Label: 'Durum' },
                 { Value: attritionRisk, Label: 'Yapay Zeka Risk Skoru' }
@@ -60,8 +61,8 @@ annotate service.Employees with @(
         },
         FieldGroup#Hire: {
             Data: [
-                { Value: department_ID },
-                { Value: position_ID },
+                { Value: department.name },
+                { Value: position.title },
                 { Value: hireDate },
                 { Value: status },
                 { Value: attritionRisk, Label: 'Yapay Zeka Risk Skoru' }
