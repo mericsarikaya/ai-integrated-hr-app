@@ -1,0 +1,19 @@
+ID,title,description,level,minSalary,maxSalary,isActive,department_ID,createdAt,modifiedAt
+p001,İK Müdürü,İK departmanı yönetimi,Manager,45000,65000,true,d001,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p002,İK Uzmanı,İşe alım ve çalışan ilişkileri,Mid,25000,40000,true,d001,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p003,Yazılım Mühendisi,Full-stack uygulama geliştirme,Mid,35000,55000,true,d002,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p004,Kıdemli Yazılım Mühendisi,Teknik liderlik ve mimari tasarım,Senior,50000,75000,true,d002,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p005,DevOps Mühendisi,CI/CD ve bulut altyapı yönetimi,Mid,40000,60000,true,d002,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p006,IT Müdürü,BT departmanı yönetimi,Manager,55000,80000,true,d002,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p007,Finans Müdürü,Finansal operasyonlar yönetimi,Manager,50000,70000,true,d003,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p008,Muhasebe Uzmanı,Genel muhasebe işlemleri,Mid,22000,35000,true,d003,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p009,Pazarlama Müdürü,Pazarlama stratejisi ve yönetimi,Manager,45000,65000,true,d004,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p010,Dijital Pazarlama Uzmanı,SEO SEM ve sosyal medya yönetimi,Mid,25000,40000,true,d004,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p011,Satış Müdürü,Satış ekibi yönetimi ve strateji,Manager,50000,75000,true,d005,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p012,Satış Temsilcisi,Müşteri ilişkileri ve satış,Junior,18000,30000,true,d005,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p013,Operasyon Müdürü,Üretim ve operasyon yönetimi,Manager,48000,68000,true,d006,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p014,Kalite Kontrol Uzmanı,Ürün kalite standartları,Mid,24000,38000,true,d006,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p015,Ar-Ge Mühendisi,Yeni ürün araştırma ve geliştirme,Mid,38000,58000,true,d007,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p016,Hukuk Danışmanı,Şirket hukuki süreç yönetimi,Senior,40000,60000,true,d008,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p017,Veri Bilimci,Makine öğrenmesi ve veri analizi,Senior,45000,70000,true,d002,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z
+p018,İK Stajyeri,İK departmanı destek,Junior,12000,18000,true,d001,2026-01-01T00:00:00Z,2026-01-01T00:00:00Z

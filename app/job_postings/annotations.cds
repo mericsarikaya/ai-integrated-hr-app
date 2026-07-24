@@ -11,7 +11,6 @@ annotate service.PublicJobPostings with @(
         },
         SelectionFields: [ status ],
 
-        // Liste Görünümü
         LineItem: [
             { Value: title, Label: 'İlan Başlığı' },
             { Value: status, Label: 'Durum' },
@@ -20,7 +19,6 @@ annotate service.PublicJobPostings with @(
             { Value: vacancies, Label: 'Kontenjan' }
         ],
 
-        // Detay Sayfası
         Facets: [
             {
                 $Type: 'UI.ReferenceFacet',
@@ -29,7 +27,6 @@ annotate service.PublicJobPostings with @(
             }
         ],
 
-        // "Başvur" butonu — İlan detay sayfasının üstünde görünür
         Identification: [
             {
                 $Type:  'UI.DataFieldForAction',
