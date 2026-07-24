@@ -130,3 +130,60 @@ annotate service.JobPostings {
     });
 };
 
+annotate service.Candidates {
+    jobPosting @(Common.ValueList: {
+        CollectionPath: 'PublicJobPostings',
+        Label: 'Açık İş İlanları',
+        Parameters: [
+            { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: jobPosting_ID, ValueListProperty: 'ID' },
+            { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'title' }
+        ]
+    });
+};
+
+// MY APPLICATIONS (ADAY EKRANI) FIORI TASARIMI
+annotate service.MyApplications with @(
+    UI: {
+        HeaderInfo: {
+            TypeName: 'Başvurum',
+            TypeNamePlural: 'Başvurularım'
+        },
+        LineItem: [
+            { Value: jobPosting_ID, Label: 'Başvurulan İlan' },
+            { Value: status, Label: 'Durum' },
+            { Value: applicationDate, Label: 'Başvuru Tarihi' }
+        ],
+        Facets: [
+            {
+                $Type: 'UI.ReferenceFacet',
+                Label: 'Başvuru Formu',
+                Target: '@UI.FieldGroup#MyAppInfo'
+            }
+        ],
+        FieldGroup#MyAppInfo: {
+            Data: [
+                { Value: jobPosting_ID, Label: 'İlan Seçiniz' },
+                { Value: firstName, Label: 'Adınız' },
+                { Value: lastName, Label: 'Soyadınız' },
+                { Value: email, Label: 'E-Posta' },
+                { Value: phone, Label: 'Telefon' },
+                { Value: resumeFile, Label: 'CV (PDF) Yükle' }
+            ]
+        }
+    }
+);
+
+annotate service.MyApplications with {
+    jobPosting_ID @(
+        Common.Text: jobPosting_title,
+        Common.TextArrangement: #TextOnly,
+        Common.ValueList: {
+            CollectionPath: 'PublicJobPostings',
+            Label: 'Açık İş İlanları',
+            Parameters: [
+                { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: jobPosting_ID, ValueListProperty: 'ID' },
+                { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'title' }
+            ]
+        }
+    );
+};

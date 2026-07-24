@@ -10,31 +10,35 @@ service HRService @(path: '/hr') {
         { grant: 'READ', to: ['Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
     ])
-    entity Employees          as projection on app.Employees;
+    entity Employees as projection on app.Employees;
+
 
     @(restrict: [
         { grant: 'READ', to: ['Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
     ])
-    entity Departments        as projection on app.Departments;
+    entity Departments as projection on app.Departments;
+
 
     @(restrict: [
         { grant: 'READ', to: ['Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
     ])
-    entity Positions          as projection on app.Positions;
+    entity Positions as projection on app.Positions;
+
 
     @(restrict: [
         { grant: 'READ', to: ['Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
     ])
-    entity Skills             as projection on app.Skills;
+    entity Skills as projection on app.Skills;
+
 
     @(restrict: [
         { grant: 'READ', to: ['Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
     ])
-    entity EmployeeSkills     as projection on app.EmployeeSkills;
+    entity EmployeeSkills as projection on app.EmployeeSkills;
 
     // ============================================================
     // İŞE ALIM — JobPostings: herkes READ, HRAdmin FULL
@@ -48,6 +52,7 @@ service HRService @(path: '/hr') {
     ])
     entity JobPostings as projection on app.JobPostings;
     
+
     @readonly
     @(requires: ['Candidate', 'Employee', 'HRAdmin'])
     @(Capabilities: {
@@ -64,16 +69,19 @@ service HRService @(path: '/hr') {
         ) returns String;
     };
 
+    @cds.redirection.target
     @(restrict: [
-        { grant: ['CREATE', 'READ'], to: ['Candidate', 'Employee'] },
+        { grant: ['CREATE', 'READ', 'UPDATE'], to: ['Candidate', 'Employee'], where: 'createdBy = $user' },
         { grant: '*', to: 'HRAdmin' }
     ])
+    @odata.draft.enabled
     entity Candidates as projection on app.Candidates actions {
         action analyzeCV() returns String;
     };
 
+
     @(requires: 'HRAdmin')
-    entity CVAnalysisResults  as projection on app.CVAnalysisResults;
+    entity CVAnalysisResults as projection on app.CVAnalysisResults;
 
     // ============================================================
     // PERFORMANS — Sadece HRAdmin
@@ -83,17 +91,17 @@ service HRService @(path: '/hr') {
     entity PerformanceReviews as projection on app.PerformanceReviews;
 
     @(requires: 'HRAdmin')
-    entity Goals              as projection on app.Goals;
+    entity Goals as projection on app.Goals;
 
     // ============================================================
     // ANKETLER — Sadece HRAdmin
     // ============================================================
 
     @(requires: 'HRAdmin')
-    entity Surveys            as projection on app.Surveys;
+    entity Surveys as projection on app.Surveys;
 
     @(requires: 'HRAdmin')
-    entity SurveyResponses    as projection on app.SurveyResponses;
+    entity SurveyResponses as projection on app.SurveyResponses;
 
     // ============================================================
     // AI & CHATBOT — Herkes erişebilir
@@ -102,7 +110,7 @@ service HRService @(path: '/hr') {
     @(restrict: [
         { grant: '*', to: ['Candidate', 'Employee', 'HRAdmin'] }
     ])
-    entity ChatMessages       as projection on app.ChatMessages;
+    entity ChatMessages as projection on app.ChatMessages;
 
     @(requires: 'HRAdmin')
     entity AttritionRiskHistory as projection on app.AttritionRiskHistory;
@@ -111,20 +119,40 @@ service HRService @(path: '/hr') {
         { grant: 'READ', to: ['Candidate', 'Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
     ])
-    entity HRPolicies         as projection on app.HRPolicies;
+    entity HRPolicies as projection on app.HRPolicies;
 
+
+    @(restrict: [
+        { grant: ['CREATE', 'READ', 'UPDATE'], to: 'Candidate', where: 'createdBy = $user' }
+    ])
+    @odata.draft.enabled
+    entity MyApplications as projection on app.Candidates {
+        key ID,
+        firstName,
+        lastName,
+        email,
+        phone,
+        jobPosting,
+        jobPosting.title as jobPosting_title,
+        resumeFile,
+        mediaType,
+        fileName,
+        applicationDate @readonly,
+        status @readonly,
+        createdBy
+    };
     // ============================================================
     // CUSTOM ACTIONS (AI) — Rol bazlı erişim
     // ============================================================
 
     @(requires: 'HRAdmin')
-    action calculateAttritionRisk(employeeId: UUID)  returns String;
+    action calculateAttritionRisk(employeeId: UUID) returns String;
 
     @(requires: ['Candidate', 'Employee', 'HRAdmin'])
     action askHRBot(conversationId: String, question: String) returns String;
 
     @(requires: 'HRAdmin')
-    action analyzeSurvey(surveyId: UUID)             returns String;
+    action analyzeSurvey(surveyId: UUID) returns String;
 
     @(requires: 'HRAdmin')
     action uploadCVPDF(candidateId: UUID, pdfBase64: LargeString) returns String;
