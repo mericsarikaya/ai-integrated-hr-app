@@ -74,7 +74,7 @@ service HRService @(path: '/hr') {
         { grant: ['CREATE', 'READ', 'UPDATE'], to: ['Candidate', 'Employee'], where: 'createdBy = $user' },
         { grant: '*', to: 'HRAdmin' }
     ])
-    @odata.draft.enabled
+    //@odata.draft.enabled
     entity Candidates as projection on app.Candidates actions {
         action analyzeCV() returns String;
     };

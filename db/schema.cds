@@ -111,7 +111,7 @@ entity JobPostings : cuid, managed {
     vacancies        : Integer default 1;
     position         : Association to Positions;
     department       : Association to Departments;
-    candidates       : Association to many Candidates on candidates.jobPosting = $self;
+    candidates       : Composition of many Candidates on candidates.jobPosting = $self;
 }
 
 // ============================================================
