@@ -50,7 +50,10 @@ service HRService @(path: '/hr') {
         { grant: 'READ', to: ['Candidate', 'Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
     ])
-    entity JobPostings as projection on app.JobPostings;
+    entity JobPostings as projection on app.JobPostings{
+        *,
+        'İlana Başvur' as applyLabel: String
+    }
     
 
     @readonly
@@ -78,7 +81,7 @@ service HRService @(path: '/hr') {
     entity Candidates as projection on app.Candidates actions {
         action analyzeCV() returns String;
     };
-
+    
 
     @(requires: 'HRAdmin')
     entity CVAnalysisResults as projection on app.CVAnalysisResults;

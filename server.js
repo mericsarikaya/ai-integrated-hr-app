@@ -74,6 +74,7 @@ cds.on('bootstrap', (app) => {
         }
     });
 
+
 // Kayıt Olma Endpoint
  app.post('/register', express.json(), async (req, res) => {
      try {

@@ -81,8 +81,18 @@ annotate service.JobPostings with @(
             { Value: status, Label: 'Durum' },
             { Value: openDate, Label: 'Açılış Tarihi' },
             { Value: closeDate, Label: 'Kapanış Tarihi' },
-            { Value: vacancies, Label: 'Kontenjan' }
+            { Value: vacancies, Label: 'Kontenjan' },
+            
         ],
+        Identification: [
+            {
+                $Type: 'UI.DataFieldWithUrl',
+                Value: applyLabel,
+                Url  : '/$fiori-preview/HRService/MyApplications#preview-app',
+                Label: '📩 Aday Başvuru Ekranına Git'
+            }
+        ],
+        
         Facets: [
             {
                 $Type: 'UI.ReferenceFacet',
@@ -92,9 +102,11 @@ annotate service.JobPostings with @(
             {
                 $Type: 'UI.ReferenceFacet',
                 Label: 'Bu İlana Gelen Başvurular',
-                Target: 'candidates/@UI.LineItem'
+                Target: 'candidates/@UI.LineItem',
+
             }
         ],
+
         FieldGroup#AdminPostingInfo: {
             Data: [
                 { Value: title, Label: 'İlan Başlığı' },

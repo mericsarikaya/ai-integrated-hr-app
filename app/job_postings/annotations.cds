@@ -27,14 +27,6 @@ annotate service.PublicJobPostings with @(
             }
         ],
 
-        Identification: [
-            {
-                $Type:  'UI.DataFieldForAction',
-                Action: 'HRService.PublicJobPostings.applyToJob',
-                Label:  '📩 Bu İlana Başvur'
-            }
-        ],
-
         FieldGroup#PostingInfo: {
             Data: [
                 { Value: title, Label: 'İlan Başlığı' },
