@@ -264,4 +264,5 @@ entity HRPolicies : cuid, managed {
 entity Passwords : cuid, managed{
     authorizationPerson : String(200) @mandatory;
     password            : String(200) @mandatory; 
+    authorizationLevel  : String(200);
 }
