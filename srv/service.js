@@ -77,15 +77,17 @@ export default cds.service.impl(async function() {
     // AI ile CV Analizi
     this.on('analyzeCV','Candidates', async (req) => {
         req.notify('CV analizi başlatıldı');
-        const candidateId = req.params[0]?.ID || req.params[0];
         const tx = cds.transaction(req);
         
         try {
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
-            const candidate = await tx.run(SELECT.one.from(Candidates).where({ ID: candidateId }));
+            const candidate = await tx.run(SELECT.one.from(req.subject));
             if (!candidate) return req.error(404, 'Aday bulunamadı');
+
+            const candidateId = candidate.ID; 
+            
             if (!candidate.resumeText) return req.error(400, 'Adayın CV metni (resumeText) boş');
 
             const job = await tx.run(SELECT.one.from(JobPostings).where({ ID: candidate.jobPosting_ID }));
