@@ -245,9 +245,6 @@ export default cds.service.impl(async function() {
         }
     });
 
-
-
-
     // KULLANICI BİLGİSİNİ VE ROLÜNÜ DÖNEN FONKSİYON
     this.on('getMyUserInfo', (req) => {
         let userRole = 'Candidate'; // Varsayılan aday
@@ -261,4 +258,19 @@ export default cds.service.impl(async function() {
         };
     });
 
+    //     this.on('goToApplyPage', 'JobPostings', async (req) => {
+    //     const ilanId = req.params[0]?.ID || req.params[0];
+        
+    //     console.log(`Kullanıcı ${ilanId} ID'li ilan için yönlendirme butonuna bastı.`);
+        
+    //     req.notify('Başvuru sayfasına yönlendiriliyorsunuz...');
+        
+        
+    //     return "/$fiori-preview/HRService/MyApplications#preview-app"; 
+    // });
+
+
 });
+
+
+
