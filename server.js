@@ -52,8 +52,8 @@ cds.on('bootstrap', (app) => {
                 
                 // Rolü belirle
                 let userRole = 'Candidate';
-                if (username === 'ik') userRole = 'HRAdmin';
-                if (username === 'calisan') userRole = 'Employee';
+                if (dbUser.authorizationLevel === 'ik') userRole = 'HRAdmin';
+                if (dbUser.authorizationLevel === 'calisan') userRole = 'Employee';
 
                 // CDS'in mocked auth'unun tanıyacağı kullanıcı bilgilerini header'a yaz
                 // Bu sayede CDS rolü doğru atayacak ve Fiori butonları doğru gösterecek
