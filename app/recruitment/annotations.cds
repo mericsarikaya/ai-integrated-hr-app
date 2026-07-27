@@ -84,14 +84,6 @@ annotate service.JobPostings with @(
             { Value: vacancies, Label: 'Kontenjan' },
             
         ],
-        Identification: [
-            {
-                $Type: 'UI.DataFieldWithUrl',
-                Value: applyLabel,
-                Url  : '/$fiori-preview/HRService/MyApplications#preview-app',
-                Label: '📩 Aday Başvuru Ekranına Git'
-            }
-        ],
         
         Facets: [
             {
@@ -117,7 +109,13 @@ annotate service.JobPostings with @(
                 { Value: closeDate, Label: 'Kapanış Tarihi' },
                 { Value: vacancies, Label: 'Alınacak Kişi Sayısı' },
                 { Value: department_ID, Label: 'Departman' },
-                { Value: position_ID, Label: 'Pozisyon' }
+                { Value: position_ID, Label: 'Pozisyon' },
+                {
+                $Type: 'UI.DataFieldWithUrl',
+                Value: title,
+                Url  : '/$fiori-preview/HRService/MyApplications?prefferredMode=create#preview-app',
+                Label: '📩 Aday Başvuru Ekranına Git'
+                }
             ]
         }
     }
