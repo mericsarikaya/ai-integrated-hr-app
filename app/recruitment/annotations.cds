@@ -161,7 +161,9 @@ annotate service.MyApplications with @(
         LineItem: [
             { Value: jobPosting_ID, Label: 'Başvurulan İlan' },
             { Value: status, Label: 'Durum' },
-            { Value: applicationDate, Label: 'Başvuru Tarihi' }
+            { Value: applicationDate, Label: 'Başvuru Tarihi' },
+            { Value: firstName, Label: 'Ad' },
+            { Value: lastName, Label: 'Soyad' }
         ],
         Facets: [
             {
@@ -172,8 +174,8 @@ annotate service.MyApplications with @(
         ],
         FieldGroup#MyAppInfo: {
             Data: [
-                { Value: jobPosting_ID, Label: 'İlan Seçiniz' },
                 { Value: firstName, Label: 'Adınız' },
+                { Value: jobPosting_ID, Label: 'İlan Seçiniz' },
                 { Value: lastName, Label: 'Soyadınız' },
                 { Value: email, Label: 'E-Posta' },
                 { Value: phone, Label: 'Telefon' },
@@ -184,8 +186,8 @@ annotate service.MyApplications with @(
 );
 
 annotate service.MyApplications with {
-    jobPosting_ID @(
-        Common.Text: jobPosting_title,
+    jobPosting @(
+        Common.Text: jobPosting.title,
         Common.TextArrangement: #TextOnly,
         Common.ValueList: {
             CollectionPath: 'PublicJobPostings',
