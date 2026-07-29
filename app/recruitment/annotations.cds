@@ -141,7 +141,7 @@ annotate service.JobPostings {
 };
 
 annotate service.Candidates {
-    jobPosting @(Common.ValueList: {
+    jobPosting_ID @(Common.ValueList: {
         CollectionPath: 'PublicJobPostings',
         Label: 'Açık İş İlanları',
         Parameters: [
@@ -186,9 +186,7 @@ annotate service.MyApplications with @(
 );
 
 annotate service.MyApplications with {
-    jobPosting @(
-        Common.Text: jobPosting.title,
-        Common.TextArrangement: #TextOnly,
+    jobPosting_ID @(
         Common.ValueList: {
             CollectionPath: 'PublicJobPostings',
             Label: 'Açık İş İlanları',

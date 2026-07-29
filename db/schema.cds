@@ -15,7 +15,7 @@ type ReviewStatus     : String(20) enum { DRAFT; SUBMITTED; APPROVED; REJECTED; 
 type Sentiment        : String(20) enum { POSITIVE; NEUTRAL; NEGATIVE; }
 type JobPostingStatus : String(20) enum { OPEN; CLOSED; ON_HOLD; CANCELLED; }
 type SurveyStatus     : String(20) enum { DRAFT; ACTIVE; CLOSED; }
-
+type Approval  : String(20) enum {APPLIED; APPROVED; DECLINED}
 // ============================================================
 // DEPARTMENTS
 // ============================================================
@@ -76,6 +76,9 @@ entity Employees : cuid, managed {
     riskLevel        : RiskLevel;
     lastRiskCalcDate : Timestamp;
     riskHistory      : Composition of many AttritionRiskHistory on riskHistory.employee = $self;
+
+    // İzin
+    annual : Association to many Annuals on annual.employee = $self;
 }
 
 // ============================================================
@@ -265,4 +268,14 @@ entity Passwords : cuid, managed{
     authorizationPerson : String(200) @mandatory;
     password            : String(200) @mandatory; 
     authorizationLevel  : String(200);
+}
+
+entity Annuals : cuid, managed{
+    employee : Association to Employees;
+
+    start_date: Date;
+    end_date: Date;
+    description: String(200);
+
+    approval: Approval;
 }
