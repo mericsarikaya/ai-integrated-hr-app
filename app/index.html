@@ -165,6 +165,14 @@
 
     <div class="grid-container" id="tilesContainer">
 
+        <!-- TILE: Çalışan Rehberi — Employee + HRAdmin -->
+        <a href="http://localhost:4004/$fiori-preview/HRService/Employees#preview-app&/?sap-iapp-state=TASO5ZX2JBLM2H68E850Y2WL0IAZM7MNAYVROLH8V" class="tile" id="tile-employees"
+           data-roles="Employee,HRAdmin">
+            <i class="ri-team-line"></i>
+            <h3>Çalışan Rehberi</h3>
+            <p>Şirket içi personeli yönet, performans ve ayrılma riski raporlarını incele.</p>
+        </a>
+        
         <!-- TILE: İş İlanı Yönetimi — Sadece HRAdmin -->
         <a href="/$fiori-preview/HRService/JobPostings#preview-app" class="tile" id="tile-jobadmin"
            data-roles="HRAdmin,Candidate">
@@ -173,20 +181,20 @@
             <p>İlan oluştur, düzenle, sil ve gelen başvuruları incele.</p>
         </a>
 
-        <!-- TILE: Çalışan Rehberi — Employee + HRAdmin -->
-        <a href="http://localhost:4004/$fiori-preview/HRService/Employees#preview-app&/?sap-iapp-state=TASO5ZX2JBLM2H68E850Y2WL0IAZM7MNAYVROLH8V" class="tile" id="tile-employees"
-           data-roles="Employee,HRAdmin">
-            <i class="ri-team-line"></i>
-            <h3>Çalışan Rehberi</h3>
-            <p>Şirket içi personeli yönet, performans ve ayrılma riski raporlarını incele.</p>
-        </a>
-
         <!-- TILE: Başvurularım — Herkes (Candidate) -->
         <a href="/$fiori-preview/HRService/MyApplications#preview-app" class="tile" id="tile-jobs"
            data-roles="Candidate">
             <i class="ri-briefcase-line"></i>
             <h3>Başvurularım</h3>
             <p>Yeni bir başvuru oluştur, ilan seç ve CV'ni (PDF) yükle.</p>
+        </a>
+
+        <!-- TILE: İzinler -->
+        <a href="/$fiori-preview/HRService/Annuals#preview-app" class="tile" id="tile-employees"
+           data-roles="Employee">
+            <i class="ri-calendar-todo-line"></i>
+            <h3>İzinler</h3>
+            <p>İzin başvurusunda bulun!</p>
         </a>
 
         <!-- TILE: HR Yapay Zeka Asistanı — Herkes -->

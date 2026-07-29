@@ -26,6 +26,11 @@ service HRService @(path: '/hr') {
     ])
     entity Positions as projection on app.Positions;
 
+    @(restrict: [
+        { grant: 'READ', to: ['Employee'] },
+        { grant: '*',    to: 'Employee' }
+    ])
+    entity Annuals as projection on app.Annuals;
 
     @(restrict: [
         { grant: 'READ', to: ['Employee', 'HRAdmin'] },
