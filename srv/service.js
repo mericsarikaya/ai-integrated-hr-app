@@ -2,6 +2,7 @@ import 'dotenv/config';
 import cds from '@sap/cds';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createRequire } from 'module';
+import { SELECT } from '@sap/cds/lib/ql/cds-ql';
 const require = createRequire(import.meta.url);
 const pdfParse = require('pdf-parse');
 
@@ -10,9 +11,6 @@ export default cds.service.impl(async function() {
     // Entity referansları
     const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies, Annuals } = this.entities;
 
-    // ============================================================
-    // 1. EVENT HANDLERS (VALIDASYONLAR & İŞ KURALLARI)
-    // ============================================================
 
     this.before('CREATE', Employees, async (req) => {
         const data = req.data;
@@ -48,9 +46,6 @@ export default cds.service.impl(async function() {
         }
     });
 
-    // ============================================================
-    // 2. CUSTOM ACTIONS (GERÇEK YAPAY ZEKA ENTEGRASYONLARI)
-    // ============================================================
 
     // PDF Yükleme ve Metin Çıkarma
     this.on('uploadCVPDF', async (req) => {
@@ -214,7 +209,7 @@ export default cds.service.impl(async function() {
          return "Anket duygu analizi tamamlandı (Mock).";
     });
 
-        this.on('applyToJob', 'PublicJobPostings', async (req) => {
+    this.on('applyToJob', 'PublicJobPostings', async (req) => {
         const jobPostingId = req.params[0]?.ID || req.params[0];
         const { firstName, lastName, email, phone } = req.data;
         const tx = cds.transaction(req);
@@ -226,9 +221,13 @@ export default cds.service.impl(async function() {
             if (existing) {
                 return req.error(409, 'Bu e-posta adresiyle bu ilana zaten başvuru yapılmış.');
             }
+            
+            // Gerçek kullanıcı ID'sini al (Örn: "aday")
+            const realUserId = req.headers['x-custom-userid'] || req.user.id;
             // Adayı Candidates tablosuna ekle
             await tx.run(
                 INSERT.into(Candidates).entries({
+                    userId:          realUserId, // YENİ EKLENEN SATIR
                     firstName:       firstName,
                     lastName:        lastName,
                     email:           email,
@@ -258,9 +257,53 @@ export default cds.service.impl(async function() {
         };
     });
 
-    // --------------------------------------------------------
-    // İZİN (ANNUALS) OLUŞTURULMADAN ÖNCE (CREATE)
-    // --------------------------------------------------------
+
+    async function checkManagerPermission(req, employeeId, tx) {
+        if (req.user.is('HRAdmin')) return true; 
+        const realUserId = req.headers['x-custom-userid'] || req.user.id;
+        
+        const currentUser = await tx.run(SELECT.one.from(Employees).where({ userId: realUserId }));
+        if (!currentUser) return false;
+        
+        const targetEmployee = await tx.run(SELECT.one.from(Employees).where({ ID: employeeId }));
+        if (!targetEmployee) return false;
+        
+        return targetEmployee.manager_ID === currentUser.ID;
+    }
+    this.on('approveLeave', 'Annuals', async (req) => {
+        const leaveId = req.params[0]?.ID || req.params[0]; 
+        const tx = cds.transaction(req);
+        
+        const leaveRequest = await tx.run(SELECT.one.from(Annuals).where({ ID: leaveId }));
+        if (!leaveRequest) return req.error(404, 'İzin kaydı bulunamadı.');
+        
+        if (leaveRequest.approval === 'APPROVED') return req.error(400, 'Bu izin zaten onaylanmış.');
+        const hasPermission = await checkManagerPermission(req, leaveRequest.employee_ID, tx);
+        if (!hasPermission) {
+            return req.error(403, 'Yetkiniz yok. Sadece yöneticisi veya İK yetkilisi onaylayabilir.');
+        }
+        await tx.run(UPDATE(Annuals).set({ approval: 'APPROVED' }).where({ ID: leaveId }));
+        await tx.run(SELECT.one.from(Employees).where({ID: realUserId}));
+        await tx.run(UPDATE(Employees).set({}))
+        
+        return 'İzin başarıyla onaylandı.';
+    });
+    this.on('rejectLeave', 'Annuals', async (req) => {
+        const leaveId = req.params[0]?.ID || req.params[0];
+        const tx = cds.transaction(req);
+        
+        const leaveRequest = await tx.run(SELECT.one.from(Annuals).where({ ID: leaveId }));
+        if (!leaveRequest) return req.error(404, 'İzin kaydı bulunamadı.');
+        if (leaveRequest.approval === 'DECLINED') return req.error(400, 'Bu izin zaten reddedilmiş.');
+        
+        const hasPermission = await checkManagerPermission(req, leaveRequest.employee_ID, tx);
+        if (!hasPermission) {
+            return req.error(403, 'Yetkiniz yok. Sadece yöneticisi veya İK yetkilisi reddedebilir.');
+        }
+        await tx.run(UPDATE(Annuals).set({ approval: 'DECLINED' }).where({ ID: leaveId }));
+        return 'İzin reddedildi.';
+    });
+
         this.before(['CREATE', 'NEW'], Annuals, async (req) => {
         const tx = cds.transaction(req);
         
@@ -279,7 +322,7 @@ export default cds.service.impl(async function() {
         if (!req.data.approval) req.data.approval = 'APPLIED';
     });
 
-           this.before('READ', Annuals, async (req) => {
+    this.before('READ', Annuals, async (req) => {
         // İK (HRAdmin) tüm izinleri görebilmelidir, bu kural aynı kalıyor.
         if (req.user.is('HRAdmin')) return; 
 
@@ -291,10 +334,7 @@ export default cds.service.impl(async function() {
         const realUserId = req.headers['x-custom-userid'] || req.user.id;
         
         const currentEmployee = await tx.run(SELECT.one.from(Employees).where({ userId: realUserId }));
-        
-        // --- SIKI GÜVENLİK (GERİ GELDİ) ---
-        // Eğer sisteme giren kişinin veritabanında (Employees tablosunda) geçerli bir kaydı/eşleşmesi yoksa, 
-        // başkalarının izinlerini GÖRMESİN! Listeyi boş getir.
+    
         if (!currentEmployee) {
             req.query.where({ employee_ID: 'GECERSIZ_KULLANICI' });
             return; 
@@ -306,6 +346,56 @@ export default cds.service.impl(async function() {
 
         // Listeyi SADECE izin verilen bu kişilere daralt (Obje formatında güvenli filtre)
         req.query.where({ employee_ID: { 'in': allowedEmployeeIds } });
+    });
+
+
+    const MyApplications = this.entities.MyApplications; 
+
+    this.before(['CREATE', 'NEW'], [Candidates, MyApplications], (req) => {
+        const realUserId = req.headers['x-custom-userid'] || req.user.id;
+        req.data.userId = realUserId;
+        if (!req.data.status) req.data.status = 'APPLIED';
+    });
+
+    this.before('READ', [Candidates, MyApplications], async (req) => {
+        if (req.user.is('HRAdmin')) return; // İK ise filtreyi atla
+        
+        const realUserId = req.headers['x-custom-userid'] || req.user.id;
+        // Tüm okuma işlemlerinde ŞARTSIZ olarak kişinin kendi kimliğiyle filtrele!
+        req.query.where({ userId: realUserId });
+    });
+
+    
+     this.on('processCandidate', 'Candidates', async (req) => {
+        const candidateId = req.params[0]?.ID || req.params[0];
+        const tx = cds.transaction(req);
+        
+        const candidate = await tx.run(SELECT.one.from(Candidates).where({ ID: candidateId }));
+        if (!candidate) return req.error(404, 'Aday bulunamadı.');
+        await tx.run(UPDATE(Candidates).set({ status: 'SCREENING' }).where({ ID: candidateId }));
+        return 'Aday değerlendirme sürecine alındı.';
+    });
+    
+    this.on('approveCandidate', 'Candidates', async (req) => {
+        const candidateId = req.params[0]?.ID || req.params[0];
+        const tx = cds.transaction(req);
+        
+        const candidate = await tx.run(SELECT.one.from(Candidates).where({ ID: candidateId }));
+        if (!candidate) return req.error(404, 'Aday bulunamadı.');
+        // ACCEPTED statüsüne geçtiğinde sistem otomatik olarak JobPostings tablosunda kontenjanı 1 düşürecektir.
+        await tx.run(UPDATE(Candidates).set({ status: 'ACCEPTED' }).where({ ID: candidateId }));
+        return 'Aday onaylandı ve işe alındı.';
+    });
+
+    
+    this.on('rejectCandidate', 'Candidates', async (req) => {
+        const candidateId = req.params[0]?.ID || req.params[0];
+        const tx = cds.transaction(req);
+        
+        const candidate = await tx.run(SELECT.one.from(Candidates).where({ ID: candidateId }));
+        if (!candidate) return req.error(404, 'Aday bulunamadı.');
+        await tx.run(UPDATE(Candidates).set({ status: 'REJECTED' }).where({ ID: candidateId }));
+        return 'Aday reddedildi.';
     });
 
 

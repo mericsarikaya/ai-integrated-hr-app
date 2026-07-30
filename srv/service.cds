@@ -33,6 +33,12 @@ service HRService @(path: '/hr') {
     entity Annuals as projection on app.Annuals {
         *,
         employee.firstName || ' ' || employee.lastName as employeeFullName : String // UI'da çalışanın adını kolayca göstermek için
+    }actions {
+        @(requires: ['Employee', 'HRAdmin'])
+        action approveLeave() returns String;
+        
+        @(requires: ['Employee', 'HRAdmin'])
+        action rejectLeave() returns String;
     };
 
     @(restrict: [
@@ -82,21 +88,26 @@ service HRService @(path: '/hr') {
 
     @cds.redirection.target
     @(restrict: [
-        { grant: ['CREATE', 'READ', 'UPDATE'], to: ['Candidate', 'Employee'], where: 'createdBy = $user' },
+        { grant: ['CREATE', 'READ', 'UPDATE'], to: ['Candidate', 'Employee'] },
         { grant: '*', to: 'HRAdmin' }
     ])
-    //@odata.draft.enabled
     entity Candidates as projection on app.Candidates actions {
         action analyzeCV() returns String;
+
+        @(requires: 'HRAdmin')
+        action processCandidate() returns String;
+        
+        @(requires: 'HRAdmin')
+        action approveCandidate() returns String;
+        
+        @(requires: 'HRAdmin')
+        action rejectCandidate() returns String;
     };
     
 
     @(requires: 'HRAdmin')
     entity CVAnalysisResults as projection on app.CVAnalysisResults;
 
-    // ============================================================
-    // PERFORMANS — Sadece HRAdmin
-    // ============================================================
 
     @(requires: 'HRAdmin')
     entity PerformanceReviews as projection on app.PerformanceReviews;
@@ -104,9 +115,6 @@ service HRService @(path: '/hr') {
     @(requires: 'HRAdmin')
     entity Goals as projection on app.Goals;
 
-    // ============================================================
-    // ANKETLER — Sadece HRAdmin
-    // ============================================================
 
     @(requires: 'HRAdmin')
     entity Surveys as projection on app.Surveys;
@@ -114,9 +122,6 @@ service HRService @(path: '/hr') {
     @(requires: 'HRAdmin')
     entity SurveyResponses as projection on app.SurveyResponses;
 
-    // ============================================================
-    // AI & CHATBOT — Herkes erişebilir
-    // ============================================================
 
     @(restrict: [
         { grant: '*', to: ['Candidate', 'Employee', 'HRAdmin'] }
@@ -134,7 +139,7 @@ service HRService @(path: '/hr') {
 
 
     @(restrict: [
-        { grant: ['CREATE', 'READ', 'UPDATE'], to: 'Candidate', where: 'createdBy = $user' }
+        { grant: ['CREATE', 'READ', 'UPDATE'], to: 'Candidate' }
     ])
     @odata.draft.enabled
     entity MyApplications as projection on app.Candidates {
@@ -150,11 +155,9 @@ service HRService @(path: '/hr') {
         fileName,
         applicationDate @readonly,
         status @readonly,
-        createdBy
+        createdBy,
+        userId,
     };
-    // ============================================================
-    // CUSTOM ACTIONS (AI) — Rol bazlı erişim
-    // ============================================================
 
     @(requires: 'HRAdmin')
     action calculateAttritionRisk(employeeId: UUID) returns String;
