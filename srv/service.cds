@@ -27,10 +27,13 @@ service HRService @(path: '/hr') {
     entity Positions as projection on app.Positions;
 
     @(restrict: [
-        { grant: 'READ', to: ['Employee'] },
-        { grant: '*',    to: 'Employee' }
+        { grant: '*', to: ['Employee', 'HRAdmin'] }
     ])
-    entity Annuals as projection on app.Annuals;
+    @odata.draft.enabled
+    entity Annuals as projection on app.Annuals {
+        *,
+        employee.firstName || ' ' || employee.lastName as employeeFullName : String // UI'da çalışanın adını kolayca göstermek için
+    };
 
     @(restrict: [
         { grant: 'READ', to: ['Employee', 'HRAdmin'] },

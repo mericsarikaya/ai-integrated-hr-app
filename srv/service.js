@@ -8,7 +8,7 @@ const pdfParse = require('pdf-parse');
 export default cds.service.impl(async function() {
     
     // Entity referansları
-    const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies } = this.entities;
+    const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies, Annuals } = this.entities;
 
     // ============================================================
     // 1. EVENT HANDLERS (VALIDASYONLAR & İŞ KURALLARI)
@@ -258,16 +258,52 @@ export default cds.service.impl(async function() {
         };
     });
 
-    //     this.on('goToApplyPage', 'JobPostings', async (req) => {
-    //     const ilanId = req.params[0]?.ID || req.params[0];
+    // --------------------------------------------------------
+    // İZİN (ANNUALS) OLUŞTURULMADAN ÖNCE (CREATE)
+    // --------------------------------------------------------
+        this.before(['CREATE', 'NEW'], Annuals, async (req) => {
+        const tx = cds.transaction(req);
         
-    //     console.log(`Kullanıcı ${ilanId} ID'li ilan için yönlendirme butonuna bastı.`);
+        // Önce kendi sakladığımız gerçek kimliğe bak, yoksa (test ediliyorsa) req.user.id kullan
+        const realUserId = req.headers['x-custom-userid'] || req.user.id;
         
-    //     req.notify('Başvuru sayfasına yönlendiriliyorsunuz...');
+        const currentEmployee = await tx.run(
+            SELECT.one.from(Employees).where({ userId: realUserId })
+        );
         
+        if (!currentEmployee) {
+            return req.error(400, `Giriş yapan kullanıcı (${realUserId}) ile eşleşen bir çalışan bulunamadı.`);
+        }
         
-    //     return "/$fiori-preview/HRService/MyApplications#preview-app"; 
-    // });
+        req.data.employee_ID = currentEmployee.ID;
+        if (!req.data.approval) req.data.approval = 'APPLIED';
+    });
+
+    this.before('READ', Annuals, async (req) => {
+        if (req.user.is('HRAdmin')) return; 
+
+        // 1) HAYAT KURTARAN KISIM: Eğer Fiori tek bir kaydı veya Taslağı (Draft) okumaya çalışıyorsa FİLTREYİ ATLA!
+        // Fiori detaya girerken ID ile veya IsActiveEntity ile istek atar. Bu durumlarda CAP zaten güvenliği kendi sağlar.
+        const isDraftOrSingleRead = req.query.SELECT.where && JSON.stringify(req.query.SELECT.where).includes('IsActiveEntity');
+        
+        if (isDraftOrSingleRead) {
+            return; // Filtreleme yapma, Fiori'nin taslağı sorunsuz açmasına izin ver!
+        }
+
+        // 2) SADECE LİSTE EKRANINDA FİLTRELEME YAP
+        const tx = cds.transaction(req);
+        const realUserId = req.headers['x-custom-userid'] || req.user.id;
+        
+        const currentEmployee = await tx.run(SELECT.one.from(Employees).where({ userId: realUserId }));
+        if (!currentEmployee) return req.reject(403, `Çalışan profiliniz bulunamadı.`);
+
+        const subordinates = await tx.run(SELECT.from(Employees).where({ manager_ID: currentEmployee.ID }));
+        const allowedEmployeeIds = [currentEmployee.ID, ...subordinates.map(sub => sub.ID)];
+
+        const inString = allowedEmployeeIds.map(id => `'${id}'`).join(',');
+        req.query.where(`employee_ID in (${inString})`);
+    });
+
 
 
 });

@@ -13,8 +13,6 @@ annotate service.Annuals with @(
         HeaderFacets: [],
         SelectionFields: [ employee.firstName, employee.lastName],
         LineItem: [
-            {Value: employee.firstName, Label: 'Ad'},
-            {Value: employee.lastName, Label: 'Soyad'},
             {Value: start_date, Label: 'Başlangıç Tarihi'},
             {Value: end_date, Label: 'Bitiş Tarihi'},
             {Value: approval, Label: 'Onay Durumu'}
@@ -28,8 +26,6 @@ annotate service.Annuals with @(
         ],
         FieldGroup#AnnualInfo: {
             Data: [
-                {Value: employee.firstName, Label: 'Ad'},
-                {Value: employee.lastName, Label: 'Soyad'},
                 {Value: start_date, Label: 'Başlangıç Tarihi'},
                 {Value: end_date, Label: 'Bitiş Tarihi'},
                 {Value: description, Label: 'Açıklama'},
