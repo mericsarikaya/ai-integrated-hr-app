@@ -279,31 +279,34 @@ export default cds.service.impl(async function() {
         if (!req.data.approval) req.data.approval = 'APPLIED';
     });
 
-    this.before('READ', Annuals, async (req) => {
+           this.before('READ', Annuals, async (req) => {
+        // İK (HRAdmin) tüm izinleri görebilmelidir, bu kural aynı kalıyor.
         if (req.user.is('HRAdmin')) return; 
 
-        // 1) HAYAT KURTARAN KISIM: Eğer Fiori tek bir kaydı veya Taslağı (Draft) okumaya çalışıyorsa FİLTREYİ ATLA!
-        // Fiori detaya girerken ID ile veya IsActiveEntity ile istek atar. Bu durumlarda CAP zaten güvenliği kendi sağlar.
+        // Taslak okumalarında filtreyi atla
         const isDraftOrSingleRead = req.query.SELECT.where && JSON.stringify(req.query.SELECT.where).includes('IsActiveEntity');
-        
-        if (isDraftOrSingleRead) {
-            return; // Filtreleme yapma, Fiori'nin taslağı sorunsuz açmasına izin ver!
-        }
+        if (isDraftOrSingleRead) return; 
 
-        // 2) SADECE LİSTE EKRANINDA FİLTRELEME YAP
         const tx = cds.transaction(req);
         const realUserId = req.headers['x-custom-userid'] || req.user.id;
         
         const currentEmployee = await tx.run(SELECT.one.from(Employees).where({ userId: realUserId }));
-        if (!currentEmployee) return req.reject(403, `Çalışan profiliniz bulunamadı.`);
+        
+        // --- SIKI GÜVENLİK (GERİ GELDİ) ---
+        // Eğer sisteme giren kişinin veritabanında (Employees tablosunda) geçerli bir kaydı/eşleşmesi yoksa, 
+        // başkalarının izinlerini GÖRMESİN! Listeyi boş getir.
+        if (!currentEmployee) {
+            req.query.where({ employee_ID: 'GECERSIZ_KULLANICI' });
+            return; 
+        }
 
+        // Çalışan eşleştiyse: Sadece kendi ID'si ve ekibindeki kişilerin (manager_ID) ID'lerini bul
         const subordinates = await tx.run(SELECT.from(Employees).where({ manager_ID: currentEmployee.ID }));
         const allowedEmployeeIds = [currentEmployee.ID, ...subordinates.map(sub => sub.ID)];
 
-        const inString = allowedEmployeeIds.map(id => `'${id}'`).join(',');
-        req.query.where(`employee_ID in (${inString})`);
+        // Listeyi SADECE izin verilen bu kişilere daralt (Obje formatında güvenli filtre)
+        req.query.where({ employee_ID: { 'in': allowedEmployeeIds } });
     });
-
 
 
 });
