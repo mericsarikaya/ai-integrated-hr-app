@@ -55,7 +55,8 @@ cds.on('bootstrap', (app) => {
                 if (dbUser.authorizationLevel === 'ik') userRole = 'HRAdmin';
                 if (dbUser.authorizationLevel === 'calisan') userRole = 'Employee';
 
-                // CDS'in mocked auth'unun tanıyacağı kullanıcı bilgilerini header'a yaz
+                req.headers['x-custom-userid'] = username;
+
                 // Bu sayede CDS rolü doğru atayacak ve Fiori butonları doğru gösterecek
                 const mockedMap = {
                     'HRAdmin':  'ik:3',

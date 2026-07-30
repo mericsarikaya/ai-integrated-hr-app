@@ -50,6 +50,7 @@ entity Positions : cuid, managed {
 
 entity Employees : cuid, managed {
     employeeNumber   : String(10)  @mandatory;
+    userId : String(100);
     firstName        : String(100) @mandatory;
     lastName         : String(100) @mandatory;
     email            : String(200) @mandatory;
