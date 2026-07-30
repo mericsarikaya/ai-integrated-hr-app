@@ -18,7 +18,23 @@ annotate service.Candidates with @(
             { Value: lastName, Label: 'Soyad' },
             { Value: email, Label: 'Email' },
             { Value: jobPosting.title, Label: 'Başvurulan Pozisyon' },
-            { Value: status, Label: 'Durum' }
+            { Value: status, Label: 'Durum' },
+            
+             {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.Candidates.processCandidate',
+                Label: 'Sürece Al'
+            },
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.Candidates.approveCandidate',
+                Label: 'Onayla'
+            },
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.Candidates.rejectCandidate',
+                Label: 'Reddet'
+            }
         ],
         Facets: [
             {
@@ -37,6 +53,21 @@ annotate service.Candidates with @(
                 $Type: 'UI.DataFieldForAction',
                 Action: 'HRService.Candidates.analyzeCV',
                 Label: '🧠 Yapay Zekaya CV Analiz Ettir'
+            },
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.Candidates.processCandidate',
+                Label: 'Sürece Al'
+            },
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.Candidates.approveCandidate',
+                Label: 'Onayla'
+            },
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.Candidates.rejectCandidate',
+                Label: 'Reddet'
             }
         ],
         FieldGroup#CandidateInfo: {
@@ -141,7 +172,7 @@ annotate service.JobPostings {
 };
 
 annotate service.Candidates {
-    jobPosting_ID @(Common.ValueList: {
+    jobPosting @(Common.ValueList: {
         CollectionPath: 'PublicJobPostings',
         Label: 'Açık İş İlanları',
         Parameters: [
@@ -184,9 +215,11 @@ annotate service.MyApplications with @(
         }
     }
 );
-
 annotate service.MyApplications with {
-    jobPosting_ID @(
+    jobPosting @(
+        Common.Text: jobPosting.title,
+        Common.TextArrangement: #TextOnly,
+        Common.ValueListWithFixedValues: true,
         Common.ValueList: {
             CollectionPath: 'PublicJobPostings',
             Label: 'Açık İş İlanları',

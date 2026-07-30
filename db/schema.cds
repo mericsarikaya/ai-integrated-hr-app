@@ -16,9 +16,6 @@ type Sentiment        : String(20) enum { POSITIVE; NEUTRAL; NEGATIVE; }
 type JobPostingStatus : String(20) enum { OPEN; CLOSED; ON_HOLD; CANCELLED; }
 type SurveyStatus     : String(20) enum { DRAFT; ACTIVE; CLOSED; }
 type Approval  : String(20) enum {APPLIED; APPROVED; DECLINED}
-// ============================================================
-// DEPARTMENTS
-// ============================================================
 
 entity Departments : cuid, managed {
     name          : String(100) @mandatory;
@@ -28,9 +25,6 @@ entity Departments : cuid, managed {
     positions     : Association to many Positions on positions.department = $self;
 }
 
-// ============================================================
-// POSITIONS
-// ============================================================
 
 entity Positions : cuid, managed {
     title         : String(150) @mandatory;
@@ -44,9 +38,6 @@ entity Positions : cuid, managed {
     jobPostings   : Association to many JobPostings on jobPostings.position = $self;
 }
 
-// ============================================================
-// EMPLOYEES
-// ============================================================
 
 entity Employees : cuid, managed {
     employeeNumber   : String(10)  @mandatory;
@@ -80,11 +71,9 @@ entity Employees : cuid, managed {
 
     // İzin
     annual : Association to many Annuals on annual.employee = $self;
+    annual_days: Integer;
 }
 
-// ============================================================
-// SKILLS & EMPLOYEE SKILLS (Beceri Matrisi)
-// ============================================================
 
 entity Skills : cuid, managed {
     name          : String(100) @mandatory;
@@ -101,9 +90,6 @@ entity EmployeeSkills : cuid, managed {
     certified     : Boolean default false;
 }
 
-// ============================================================
-// JOB POSTINGS (Açık Pozisyon İlanları)
-// ============================================================
 
 entity JobPostings : cuid, managed {
     title            : String(200) @mandatory;
@@ -118,9 +104,6 @@ entity JobPostings : cuid, managed {
     candidates       : Composition of many Candidates on candidates.jobPosting = $self;
 }
 
-// ============================================================
-// CANDIDATES (Adaylar)
-// ============================================================
 
 entity Candidates : cuid, managed {
     firstName        : String(100) @mandatory;
@@ -149,11 +132,10 @@ entity Candidates : cuid, managed {
     @Core.IsMediaType: true
     mediaType : String;
     fileName : String;
+
+    userId: String(100);
 }
 
-// ============================================================
-// CV ANALYSIS RESULTS (AI CV Analiz Sonuçları)
-// ============================================================
 
 entity CVAnalysisResults : cuid, managed {
     candidate        : Association to Candidates;
@@ -168,9 +150,6 @@ entity CVAnalysisResults : cuid, managed {
     analyzedAt       : Timestamp;
 }
 
-// ============================================================
-// PERFORMANCE REVIEWS (Performans Değerlendirmeleri)
-// ============================================================
 
 entity PerformanceReviews : cuid, managed {
     employee         : Association to Employees;
@@ -186,9 +165,6 @@ entity PerformanceReviews : cuid, managed {
     goals            : Association to many Goals on goals.review = $self;
 }
 
-// ============================================================
-// GOALS (Hedefler)
-// ============================================================
 
 entity Goals : cuid, managed {
     employee         : Association to Employees;
@@ -202,9 +178,6 @@ entity Goals : cuid, managed {
     managerRating    : Rating;
 }
 
-// ============================================================
-// SURVEYS & RESPONSES (Anketler)
-// ============================================================
 
 entity Surveys : cuid, managed {
     title            : String(200) @mandatory;
@@ -228,10 +201,6 @@ entity SurveyResponses : cuid, managed {
     themes           : LargeString;                // JSON array: tespit edilen temalar
 }
 
-// ============================================================
-// CHAT MESSAGES (Chatbot Konuşma Geçmişi)
-// ============================================================
-
 entity ChatMessages : cuid, managed {
     conversationId   : String(50) @mandatory;       // Oturum bazlı gruplama
     employee         : Association to Employees;
@@ -240,9 +209,6 @@ entity ChatMessages : cuid, managed {
     timestamp        : Timestamp;
 }
 
-// ============================================================
-// ATTRITION RISK HISTORY (Ayrılma Riski Geçmişi)
-// ============================================================
 
 entity AttritionRiskHistory : cuid, managed {
     employee         : Association to Employees;
@@ -253,9 +219,6 @@ entity AttritionRiskHistory : cuid, managed {
     calculatedAt     : Timestamp;
 }
 
-// ============================================================
-// HR POLICIES (Chatbot Bilgi Bankası)
-// ============================================================
 
 entity HRPolicies : cuid, managed {
     title            : String(200) @mandatory;

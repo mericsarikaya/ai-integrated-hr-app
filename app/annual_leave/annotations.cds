@@ -15,7 +15,18 @@ annotate service.Annuals with @(
         LineItem: [
             {Value: start_date, Label: 'Başlangıç Tarihi'},
             {Value: end_date, Label: 'Bitiş Tarihi'},
-            {Value: approval, Label: 'Onay Durumu'}
+            {Value: approval, Label: 'Onay Durumu'},
+            
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.approveLeave',
+                Label: 'Onayla'
+            },
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.rejectLeave',
+                Label: 'Reddet'
+            }
         ],
         Facets: [
             {
@@ -28,9 +39,21 @@ annotate service.Annuals with @(
             Data: [
                 {Value: start_date, Label: 'Başlangıç Tarihi'},
                 {Value: end_date, Label: 'Bitiş Tarihi'},
-                {Value: description, Label: 'Açıklama'},
-                
+                {Value: description, Label: 'Açıklama'}
             ]
-        }
+        },
+        
+        Identification: [
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.approveLeave',
+                Label: 'Onayla'
+            },
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'HRService.rejectLeave',
+                Label: 'Reddet'
+            }
+        ]
     }
-)
+);
