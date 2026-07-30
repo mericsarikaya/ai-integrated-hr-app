@@ -8,139 +8,62 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
+            --bg-color: #13151a; /* Daha şık, modern bir koyu ton */
+            --card-bg: rgba(30, 34, 45, 0.6);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
             --accent: #3b82f6;
-            --accent-glow: 0 0 20px rgba(59, 130, 246, 0.4);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body {
             background: var(--bg-color);
-            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
-                              radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.15), transparent 25%);
+            background-image: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08), transparent 25%),
+                              radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08), transparent 25%);
             color: var(--text-main);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem 2rem 4rem;
+            display: flex; flex-direction: column; align-items: center; padding: 1.5rem;
         }
 
         /* === Üst Bar === */
-        .top-bar {
-            width: 100%;
-            max-width: 1000px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            animation: fadeInDown 0.6s ease;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(30, 41, 59, 0.6);
-            padding: 8px 16px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .user-info i { color: var(--accent); font-size: 1.2rem; }
-        .user-info .user-name { font-weight: 600; font-size: 0.9rem; }
-        .user-info .user-role {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            background: rgba(59, 130, 246, 0.15);
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-        .logout-btn {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .logout-btn:hover {
-            background: rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-        }
+        .top-bar { width: 100%; max-width: 900px; display: flex; justify-content: flex-end; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; animation: fadeInDown 0.6s ease; }
+        .user-info { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .user-info i { color: var(--accent); font-size: 1rem; }
+        .user-info .user-name { font-weight: 500; font-size: 0.85rem; }
+        .user-info .user-role { font-size: 0.7rem; color: #cbd5e1; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 4px; }
+        
+        .logout-btn { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; }
+        .logout-btn:hover { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
 
-        .header { text-align: center; margin-bottom: 3rem; animation: fadeInDown 0.8s ease; }
-        .header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: var(--accent-glow); }
-        .header .welcome-msg { color: #94a3b8; font-size: 1.1rem; max-width: 600px; }
-        .header .role-indicator {
-            display: inline-block;
-            margin-top: 0.75rem;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
+        .header { text-align: center; margin-bottom: 2.5rem; animation: fadeInDown 0.8s ease; }
+        .header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.5px; }
+        .header .welcome-msg { color: var(--text-muted); font-size: 0.95rem; max-width: 500px; line-height: 1.5; margin: 0 auto; }
+        .header .role-indicator { display: inline-block; margin-top: 1rem; padding: 5px 14px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; }
+        
         .role-indicator.Candidate { background: rgba(234, 179, 8, 0.15); color: #fbbf24; border: 1px solid rgba(234, 179, 8, 0.3); }
         .role-indicator.Employee  { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
         .role-indicator.HRAdmin   { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            width: 100%;
-            max-width: 1000px;
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; width: 100%; max-width: 900px; }
 
         .tile {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2rem;
-            text-decoration: none;
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: fadeInUp 0.6s ease both;
+            background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 1.5rem; text-decoration: none; color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            transition: all 0.3s ease; cursor: pointer; animation: fadeInUp 0.6s ease both;
         }
-        .tile:nth-child(1) { animation-delay: 0.1s; }
-        .tile:nth-child(2) { animation-delay: 0.2s; }
-        .tile:nth-child(3) { animation-delay: 0.3s; }
-        .tile:nth-child(4) { animation-delay: 0.4s; }
+        .tile:nth-child(1) { animation-delay: 0.1s; } .tile:nth-child(2) { animation-delay: 0.2s; } .tile:nth-child(3) { animation-delay: 0.3s; } .tile:nth-child(4) { animation-delay: 0.4s; } .tile:nth-child(5) { animation-delay: 0.5s; }
+        
+        .tile:hover { transform: translateY(-5px); border-color: rgba(59, 130, 246, 0.4); background: rgba(40, 48, 65, 0.7); }
+        .tile i { font-size: 2.2rem; color: var(--accent); margin-bottom: 0.8rem; }
+        .tile h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+        .tile p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
 
-        .tile:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            box-shadow: var(--accent-glow);
-        }
-
-        .tile i { font-size: 3.5rem; color: var(--accent); margin-bottom: 1rem; }
-        .tile h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
-        .tile p { font-size: 0.9rem; color: #94a3b8; }
-
-        /* Gizli tile */
+        #tile-chatbot i { color: #10b981; }
+        #tile-chatbot:hover { border-color: rgba(16, 185, 129, 0.4); }
         .tile.hidden { display: none; }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -191,7 +114,7 @@
 
         <!-- TILE: İzinler -->
         <a href="/$fiori-preview/HRService/Annuals#preview-app" class="tile" id="tile-employees"
-           data-roles="Employee">
+           data-roles="Employee,HRAdmin">
             <i class="ri-calendar-todo-line"></i>
             <h3>İzinler</h3>
             <p>İzin başvurusunda bulun!</p>
