@@ -4,32 +4,39 @@
     <meta charset="UTF-8">
     <title>HR-AI Asistanı</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background: #f3f4f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .chat-container { width: 400px; height: 600px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+        <style>
+        body { 
+            font-family: 'Inter', sans-serif; background: #13151a; 
+            background-image: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08), transparent 25%);
+            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; 
+        }
+        .chat-container { 
+            width: 380px; height: 550px; background: rgba(30, 34, 45, 0.6); backdrop-filter: blur(10px);
+            border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.05);
+        }
         .header {
-            background: #0a426e; color: white; padding: 1rem; text-align: center; font-weight: 600;
-            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(20, 24, 34, 0.8); color: #f3f4f6; padding: 1rem; text-align: center; font-weight: 600;
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .header .title { flex: 1; text-align: center; }
+        .header .title { flex: 1; text-align: center; font-size: 0.95rem; }
         .header .back-btn {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: background 0.2s;
+            background: rgba(255,255,255,0.05); border: none; color: #cbd5e1; padding: 6px 12px; border-radius: 6px;
+            cursor: pointer; font-size: 0.75rem; font-weight: 500; transition: all 0.2s;
         }
-        .header .back-btn:hover { background: rgba(255,255,255,0.3); }
-        .messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
-        .msg { padding: 10px 15px; border-radius: 8px; max-width: 80%; font-size: 0.9rem; line-height: 1.4; }
-        .bot { background: #e2e8f0; align-self: flex-start; color: #1e293b; }
-        .user { background: #0a426e; color: white; align-self: flex-end; }
-        .input-area { display: flex; border-top: 1px solid #e2e8f0; padding: 10px; background: white; }
-        input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; }
-        button { background: #0a426e; color: white; border: none; padding: 0 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .header .back-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+        .messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        
+        .msg { padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 0.85rem; line-height: 1.4; }
+        .bot { background: rgba(40, 48, 65, 0.8); align-self: flex-start; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.05); border-bottom-left-radius: 4px; }
+        .user { background: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        
+        .input-area { display: flex; border-top: 1px solid rgba(255,255,255,0.05); padding: 1rem; background: rgba(20, 24, 34, 0.8); gap: 8px; }
+        input { flex: 1; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.08); background: rgba(15, 17, 26, 0.5); color: #f3f4f6; border-radius: 8px; outline: none; font-size: 0.85rem; transition: all 0.2s; }
+        input:focus { border-color: #3b82f6; background: rgba(15, 17, 26, 0.8); }
+        input::placeholder { color: #6b7280; }
+        button { background: #3b82f6; color: white; border: none; padding: 0 16px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.2s; }
+        button:hover { background: #2563eb; }
     </style>
 </head>
 <body>
