@@ -2,14 +2,25 @@ import 'dotenv/config';
 import cds from '@sap/cds';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createRequire } from 'module';
-import { SELECT } from '@sap/cds/lib/ql/cds-ql';
+// import { SELECT } from '@sap/cds/lib/ql/cds-ql';
 const require = createRequire(import.meta.url);
 const pdfParse = require('pdf-parse');
+const { SELECT, INSERT, UPDATE, DELETE } = cds;
 
 export default cds.service.impl(async function() {
     
     // Entity referansları
     const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies, Annuals } = this.entities;
+
+
+        this.before('*', (req) => {
+        if (!req.user.customId) {
+            
+            const rawReq = req._?.req || req.http?.req;
+            const customId = req.headers?.['x-custom-userid'] || rawReq?.headers?.['x-custom-userid'] || req.user.id;
+            req.user.customId = customId; 
+        }
+    });
 
 
     this.before('CREATE', Employees, async (req) => {
@@ -352,16 +363,19 @@ export default cds.service.impl(async function() {
     const MyApplications = this.entities.MyApplications; 
 
     this.before(['CREATE', 'NEW'], [Candidates, MyApplications], (req) => {
-        const realUserId = req.headers['x-custom-userid'] || req.user.id;
+        const realUserId = req.user.customId;
         req.data.userId = realUserId;
         if (!req.data.status) req.data.status = 'APPLIED';
     });
 
     this.before('READ', [Candidates, MyApplications], async (req) => {
-        if (req.user.is('HRAdmin')) return; // İK ise filtreyi atla
+        if (req.user.is('HRAdmin')) return;
+        const isSingleRead = (req.params && req.params.length > 0) || 
+        (req.query.SELECT.where && JSON.stringify(req.query.SELECT.where).includes('ID'));
+                             
+        if (isSingleRead) return;
         
-        const realUserId = req.headers['x-custom-userid'] || req.user.id;
-        // Tüm okuma işlemlerinde ŞARTSIZ olarak kişinin kendi kimliğiyle filtrele!
+        const realUserId = req.user.customId;
         req.query.where({ userId: realUserId });
     });
 
@@ -397,7 +411,6 @@ export default cds.service.impl(async function() {
         await tx.run(UPDATE(Candidates).set({ status: 'REJECTED' }).where({ ID: candidateId }));
         return 'Aday reddedildi.';
     });
-
 
 });
 

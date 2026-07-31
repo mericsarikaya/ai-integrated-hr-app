@@ -192,7 +192,7 @@ annotate service.MyApplications with @(
         LineItem: [
             { Value: jobPosting_ID, Label: 'Başvurulan İlan' },
             { Value: status, Label: 'Durum' },
-            { Value: applicationDate, Label: 'Başvuru Tarihi' },
+            { Value: createdAt, Label: 'Başvuru Tarihi' },
             { Value: firstName, Label: 'Ad' },
             { Value: lastName, Label: 'Soyad' }
         ],
@@ -215,13 +215,13 @@ annotate service.MyApplications with @(
         }
     }
 );
-annotate service.MyApplications with {
+annotate service.MyApplications with { 
     jobPosting @(
         Common.Text: jobPosting.title,
         Common.TextArrangement: #TextOnly,
         Common.ValueListWithFixedValues: true,
         Common.ValueList: {
-            CollectionPath: 'PublicJobPostings',
+            CollectionPath: 'JobPostings',
             Label: 'Açık İş İlanları',
             Parameters: [
                 { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: jobPosting_ID, ValueListProperty: 'ID' },

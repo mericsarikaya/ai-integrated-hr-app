@@ -2,10 +2,6 @@ using hr.app from '../db/schema';
 
 service HRService @(path: '/hr') {
 
-    // ============================================================
-    // ÇALIŞAN YÖNETİMİ — Employee: READ, HRAdmin: FULL
-    // ============================================================
-
     @(restrict: [
         { grant: 'READ', to: ['Employee', 'HRAdmin'] },
         { grant: '*',    to: 'HRAdmin' }
@@ -54,10 +50,6 @@ service HRService @(path: '/hr') {
     ])
     entity EmployeeSkills as projection on app.EmployeeSkills;
 
-    // ============================================================
-    // İŞE ALIM — JobPostings: herkes READ, HRAdmin FULL
-    //             Candidates: sadece HRAdmin
-    // ============================================================
 
     @cds.redirection.target
     @(restrict: [
@@ -88,7 +80,7 @@ service HRService @(path: '/hr') {
 
     @cds.redirection.target
     @(restrict: [
-        { grant: ['CREATE', 'READ', 'UPDATE'], to: ['Candidate', 'Employee'] },
+        { grant: ['CREATE', 'READ', 'UPDATE'], to: ['Candidate'] },
         { grant: '*', to: 'HRAdmin' }
     ])
     entity Candidates as projection on app.Candidates actions {
@@ -139,7 +131,7 @@ service HRService @(path: '/hr') {
 
 
     @(restrict: [
-        { grant: ['CREATE', 'READ', 'UPDATE'], to: 'Candidate' }
+        { grant: '*', to: 'Candidate' }
     ])
     @odata.draft.enabled
     entity MyApplications as projection on app.Candidates {
@@ -153,7 +145,7 @@ service HRService @(path: '/hr') {
         resumeFile,
         mediaType,
         fileName,
-        applicationDate @readonly,
+        createdAt @readonly,
         status @readonly,
         createdBy,
         userId,

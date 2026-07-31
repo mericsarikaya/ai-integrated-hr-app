@@ -110,8 +110,8 @@ entity Candidates : cuid, managed {
     lastName         : String(100) @mandatory;
     email            : String(200) @mandatory;
     phone            : String(20);
-    resumeFileName   : String(255);       // Yüklenen CV dosya adı
-    resumeText       : LargeString;       // CV'den çıkarılan text (AI analizi için)
+    resumeFileName   : String(255);       
+    resumeText       : LargeString;       
     linkedinUrl      : String(500);
     applicationDate  : Date;
     status           : CandidateStatus default 'APPLIED';
