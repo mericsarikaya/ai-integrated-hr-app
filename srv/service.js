@@ -1,3 +1,4 @@
+
 import 'dotenv/config';
 import cds from '@sap/cds';
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -11,7 +12,7 @@ export default cds.service.impl(async function() {
     const { SELECT, INSERT, UPDATE, DELETE } = cds.ql;
     
     // Entity referansları
-    const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies, Annuals } = this.entities;
+    const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies, Annuals,MyApplications } = this.entities;
 
 
         this.before('*', (req) => {
@@ -307,7 +308,7 @@ export default cds.service.impl(async function() {
         
         return targetEmployee.manager_ID === currentUser.ID;
     }
-    this.on('approveLeave', 'Annuals', async (req) => {
+            this.on('approveLeave', 'Annuals', async (req) => {
         const leaveId = req.params[0]?.ID || req.params[0]; 
         const tx = cds.transaction(req);
         
@@ -315,16 +316,32 @@ export default cds.service.impl(async function() {
         if (!leaveRequest) return req.error(404, 'İzin kaydı bulunamadı.');
         
         if (leaveRequest.approval === 'APPROVED') return req.error(400, 'Bu izin zaten onaylanmış.');
+        
         const hasPermission = await checkManagerPermission(req, leaveRequest.employee_ID, tx);
         if (!hasPermission) {
             return req.error(403, 'Yetkiniz yok. Sadece yöneticisi veya İK yetkilisi onaylayabilir.');
         }
-        await tx.run(UPDATE(Annuals).set({ approval: 'APPROVED' }).where({ ID: leaveId }));
-        await tx.run(SELECT.one.from(Employees).where({ID: realUserId}));
-        await tx.run(UPDATE(Employees).set({}))
+
+        const startDate = new Date(leaveRequest.start_date);
+        const endDate = new Date(leaveRequest.end_date);
+        const diffTime = Math.abs(endDate - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+        const employee = await tx.run(SELECT.one.from(Employees).where({ ID: leaveRequest.employee_ID }));
         
-        return 'İzin başarıyla onaylandı.';
+        if (!employee) return req.error(404, 'Çalışan bulunamadı.');
+        
+        const currentLeaveDays = employee.annual_days || 0;
+        if (currentLeaveDays < diffDays) {
+            return req.error(400, `Çalışanın yeterli izin hakkı bulunmamaktadır. Kalan: ${currentLeaveDays}, İstenen: ${diffDays}`);
+        }
+
+        await tx.run(UPDATE(Annuals).set({ approval: 'APPROVED' }).where({ ID: leaveId }));
+        await tx.run(UPDATE(Employees).set({ annual_days: currentLeaveDays - diffDays }).where({ ID: leaveRequest.employee_ID }));
+        
+        return `İzin başarıyla onaylandı. ${diffDays} gün çalışanın izin hakkından düşüldü.`;
     });
+
     this.on('rejectLeave', 'Annuals', async (req) => {
         const leaveId = req.params[0]?.ID || req.params[0];
         const tx = cds.transaction(req);
@@ -341,10 +358,8 @@ export default cds.service.impl(async function() {
         return 'İzin reddedildi.';
     });
 
-        this.before(['CREATE', 'NEW'], Annuals, async (req) => {
+    this.before(['CREATE', 'NEW'], Annuals, async (req) => {
         const tx = cds.transaction(req);
-        
-        // Önce kendi sakladığımız gerçek kimliğe bak, yoksa (test ediliyorsa) req.user.id kullan
         const realUserId = req.headers['x-custom-userid'] || req.user.id;
         
         const currentEmployee = await tx.run(
@@ -360,12 +375,12 @@ export default cds.service.impl(async function() {
     });
 
     this.before('READ', Annuals, async (req) => {
-        // İK (HRAdmin) tüm izinleri görebilmelidir, bu kural aynı kalıyor.
         if (req.user.is('HRAdmin')) return; 
 
-        // Taslak okumalarında filtreyi atla
-        const isDraftOrSingleRead = req.query.SELECT.where && JSON.stringify(req.query.SELECT.where).includes('IsActiveEntity');
-        if (isDraftOrSingleRead) return; 
+        const queryStr = JSON.stringify(req.query.SELECT.where || []);
+        if (queryStr.includes('"ID"')) {
+            return; 
+        }
 
         const tx = cds.transaction(req);
         const realUserId = req.headers['x-custom-userid'] || req.user.id;
@@ -377,16 +392,11 @@ export default cds.service.impl(async function() {
             return; 
         }
 
-        // Çalışan eşleştiyse: Sadece kendi ID'si ve ekibindeki kişilerin (manager_ID) ID'lerini bul
         const subordinates = await tx.run(SELECT.from(Employees).where({ manager_ID: currentEmployee.ID }));
         const allowedEmployeeIds = [currentEmployee.ID, ...subordinates.map(sub => sub.ID)];
 
-        // Listeyi SADECE izin verilen bu kişilere daralt (Obje formatında güvenli filtre)
         req.query.where({ employee_ID: { 'in': allowedEmployeeIds } });
     });
-
-
-    const MyApplications = this.entities.MyApplications; 
 
     this.before(['CREATE', 'NEW'], [Candidates, MyApplications], (req) => {
         const realUserId = req.user.customId;

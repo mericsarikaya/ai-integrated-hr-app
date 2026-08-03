@@ -54,7 +54,6 @@ entity Employees : cuid, managed {
     salary           : Decimal(12,2);
     status           : EmployeeStatus default 'ACTIVE';
 
-    // İlişkiler
     department       : Association to Departments;
     position         : Association to Positions;
     manager          : Association to Employees;
@@ -63,13 +62,11 @@ entity Employees : cuid, managed {
     reviews          : Composition of many PerformanceReviews on reviews.employee = $self;
     goals            : Composition of many Goals on goals.employee = $self;
 
-    // AI alanları
     attritionRisk    : Decimal(5,2) default 0;    // 0-100 arası
     riskLevel        : RiskLevel;
     lastRiskCalcDate : Timestamp;
     riskHistory      : Composition of many AttritionRiskHistory on riskHistory.employee = $self;
 
-    // İzin
     annual : Association to many Annuals on annual.employee = $self;
     annual_days: Integer;
 }
@@ -119,12 +116,10 @@ entity Candidates : cuid, managed {
     interviewNotes   : String(2000);
     rejectionReason  : String(500);
 
-    // İlişkiler
     jobPosting       : Association to JobPostings;
 
-    // AI analiz sonuçları
     cvAnalysis       : Composition of one CVAnalysisResults on cvAnalysis.candidate = $self;
-    // Dosya Yükleme (Fiori V4 Standartları)
+
     @Core.MediaType: mediaType
     @Core.ContentDisposition.Filename: fileName
     resumeFile : LargeBinary;
