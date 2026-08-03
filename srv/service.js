@@ -4,10 +4,11 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createRequire } from 'module';
 // import { SELECT } from '@sap/cds/lib/ql/cds-ql';
 const require = createRequire(import.meta.url);
-const pdfParse = require('pdf-parse');
-const { SELECT, INSERT, UPDATE, DELETE } = cds;
+const { PDFParse } = require('pdf-parse');
 
 export default cds.service.impl(async function() {
+
+    const { SELECT, INSERT, UPDATE, DELETE } = cds.ql;
     
     // Entity referansları
     const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies, Annuals } = this.entities;
@@ -65,8 +66,10 @@ export default cds.service.impl(async function() {
 
         try {
             const pdfBuffer = Buffer.from(pdfBase64, 'base64');
-            const data = await pdfParse(pdfBuffer);
-            const extractedText = data.text;
+            const parser = new PDFParse({ data: new Uint8Array(pdfBuffer) });
+            await parser.load();
+            const textResult = await parser.getText();
+            const extractedText = textResult.pages.map(p => p.text).join('\n');
             
             if (!extractedText || extractedText.trim() === '') {
                 return req.error(400, 'PDF dosyasından hiç metin çıkarılamadı.');
@@ -89,13 +92,36 @@ export default cds.service.impl(async function() {
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
-            const candidate = await tx.run(SELECT.one.from(req.subject));
-            if (!candidate) return req.error(404, 'Aday bulunamadı');
-
-            const candidateId = candidate.ID; 
-            
-            if (!candidate.resumeText) return req.error(400, 'Adayın CV metni (resumeText) boş');
-
+                    const candidate = await tx.run(SELECT.one.from(req.subject));
+        if (!candidate) return req.error(404, 'Aday bulunamadı');
+        const candidateId = candidate.ID;
+        if (!candidate.resumeText) {
+            const fileRow = await tx.run(
+                SELECT.one.columns('resumeFile').from('hr.app.Candidates').where({ ID: candidateId })
+            );
+            if (fileRow && fileRow.resumeFile) {
+                let pdfBuffer;
+                if (Buffer.isBuffer(fileRow.resumeFile)) {
+                    pdfBuffer = fileRow.resumeFile;
+                } else if (typeof fileRow.resumeFile.pipe === 'function') {
+                    const chunks = [];
+                    for await (const chunk of fileRow.resumeFile) {
+                        chunks.push(chunk);
+                    }
+                    pdfBuffer = Buffer.concat(chunks);
+                } else {
+                    pdfBuffer = Buffer.from(fileRow.resumeFile);
+                }
+                const parser = new PDFParse({ data: new Uint8Array(pdfBuffer) });
+                const doc = await parser.load();
+                const textResult = await parser.getText();
+                candidate.resumeText = textResult.pages.map(p => p.text).join('\n');
+                await tx.run(UPDATE('hr.app.Candidates').set({ resumeText: candidate.resumeText }).where({ ID: candidateId }));
+            }
+            if (!candidate.resumeText) {
+                return req.error(400, 'CV dosyası yüklenmemiş veya PDF okunamadı.');
+            }
+        }
             const job = await tx.run(SELECT.one.from(JobPostings).where({ ID: candidate.jobPosting_ID }));
             if (!job) return req.error(404, 'Adayın başvurduğu ilan bulunamadı');
 
@@ -413,6 +439,7 @@ export default cds.service.impl(async function() {
     });
 
 });
+
 
 
 
