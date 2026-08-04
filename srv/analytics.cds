@@ -1,9 +1,5 @@
 using hr.app from '../db/schema';
 
-// ============================================================
-// ANALİTİK CDS VIEW'LAR
-// Dashboard ve raporlama için aggregate view tanımları
-// ============================================================
 
 // Departman KPI'ları
 @readonly
