@@ -403,16 +403,19 @@ export default cds.service.impl(async function() {
         if (!req.data.status) req.data.status = 'APPLIED';
     });
 
-        this.before('READ', [Candidates, MyApplications], async (req) => {
+    this.before('READ', [Candidates, MyApplications], async (req) => {
         if (req.user.is('HRAdmin')) return;
         
-        const isSingle = (req.params && req.params.length > 0) || 
-                         (req.query.SELECT.where && req.query.SELECT.where.some(x => x.ref && x.ref.includes('ID')));
-                             
-        if (isSingle) return;
+        // Fiori Elements'in liste (navigasyon dahil) mi yoksa tekil kayıt mı okuduğunu anlama
+        const isNavigation = req.query.SELECT.from && req.query.SELECT.from.ref && req.query.SELECT.from.ref.length > 1;
+        const hasWhereId = req.query.SELECT.where && req.query.SELECT.where.some(x => x.ref && x.ref.includes('ID'));
+        const hasFromId = req.query.SELECT.from && req.query.SELECT.from.ref && req.query.SELECT.from.ref[0].where;
         
-        const realUserId = req.user.customId;
-        req.query.where({ userId: realUserId });
+        // Eğer liste veya navigasyon (JobPostings/candidates) sorgusuysa sadece kendini görecek filtreyi ekle
+        if (isNavigation || (!hasWhereId && !hasFromId)) {
+            const realUserId = req.user.customId;
+            req.query.where({ userId: realUserId });
+        }
     });
 
     this.after('READ', [Candidates, MyApplications], (data, req) => {
@@ -420,9 +423,17 @@ export default cds.service.impl(async function() {
         
         const realUserId = req.user.customId;
         
+        // Tekil okumalarda (direkt URL'den ID ile girildiğinde) ek güvenlik kontrolü
         if (!Array.isArray(data)) {
             if (data.userId && data.userId !== realUserId) {
                 req.error(403, 'Bu kaydı görüntüleme yetkiniz yok.');
+            }
+        } else {
+            // Liste okumalarında son savunma hattı (Eğer yukarıdaki filtre bir şekilde atlatılırsa)
+            for (let i = data.length - 1; i >= 0; i--) {
+                if (data[i].userId && data[i].userId !== realUserId) {
+                    data.splice(i, 1); // Başkasına ait olanları veriden acımasızca sil
+                }
             }
         }
     });
