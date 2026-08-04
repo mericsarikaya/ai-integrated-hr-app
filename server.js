@@ -66,8 +66,15 @@ cds.on('bootstrap', (app) => {
                 req.headers.authorization = `Basic ${Buffer.from(mockedMap[userRole]).toString('base64')}`;
                 next();
 
-            } else {
-                res.status(401).send('Kullanıcı adı veya şifre hatalı!');
+                        } else {
+                // Eğer istek arka plandan (fetch API) json olarak geliyorsa json dön
+                if (req.headers.accept && req.headers.accept.includes('application/json')) {
+                    res.status(401).json({ error: 'Kullanıcı adı veya şifre hatalı!' });
+                } else {
+                    // Sayfa yüklemesinde şifre yanlış çıkarsa, çerezi yok et ve logine at!
+                    res.clearCookie('hr_session');
+                    res.redirect('/login.html');
+                }
             }
         } catch (error) {
             console.error("Veritabanından şifre kontrolü yapılırken hata:", error);

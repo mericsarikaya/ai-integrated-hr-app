@@ -15,13 +15,12 @@ export default cds.service.impl(async function() {
     const { Employees, Candidates, JobPostings, PublicJobPostings, ChatMessages, CVAnalysisResults, HRPolicies, Annuals,MyApplications } = this.entities;
 
 
-        this.before('*', (req) => {
-        if (!req.user.customId) {
-            
-            const rawReq = req._?.req || req.http?.req;
-            const customId = req.headers?.['x-custom-userid'] || rawReq?.headers?.['x-custom-userid'] || req.user.id;
-            req.user.customId = customId; 
-        }
+    this.before('*', (req) => {
+        const rawReq = req._?.req || req.http?.req;
+        const customId = req.headers?.['x-custom-userid'] || rawReq?.headers?.['x-custom-userid'] || req.user.id;
+        
+        // Her istekte (if kontrolü yapmadan) ID'yi mutlaka güncelle
+        req.user.customId = customId; 
     });
 
 
@@ -92,8 +91,8 @@ export default cds.service.impl(async function() {
         try {
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+            const candidate = await tx.run(SELECT.one.from(req.subject));
 
-                    const candidate = await tx.run(SELECT.one.from(req.subject));
         if (!candidate) return req.error(404, 'Aday bulunamadı');
         const candidateId = candidate.ID;
         if (!candidate.resumeText) {
@@ -404,46 +403,65 @@ export default cds.service.impl(async function() {
         if (!req.data.status) req.data.status = 'APPLIED';
     });
 
-    this.before('READ', [Candidates, MyApplications], async (req) => {
+        this.before('READ', [Candidates, MyApplications], async (req) => {
         if (req.user.is('HRAdmin')) return;
-        const isSingleRead = (req.params && req.params.length > 0) || 
-        (req.query.SELECT.where && JSON.stringify(req.query.SELECT.where).includes('ID'));
+        
+        const isSingle = (req.params && req.params.length > 0) || 
+                         (req.query.SELECT.where && req.query.SELECT.where.some(x => x.ref && x.ref.includes('ID')));
                              
-        if (isSingleRead) return;
+        if (isSingle) return;
         
         const realUserId = req.user.customId;
         req.query.where({ userId: realUserId });
     });
 
+    this.after('READ', [Candidates, MyApplications], (data, req) => {
+        if (!data || req.user.is('HRAdmin')) return;
+        
+        const realUserId = req.user.customId;
+        
+        if (!Array.isArray(data)) {
+            if (data.userId && data.userId !== realUserId) {
+                req.error(403, 'Bu kaydı görüntüleme yetkiniz yok.');
+            }
+        }
+    });
     
-     this.on('processCandidate', 'Candidates', async (req) => {
-        const candidateId = req.params[0]?.ID || req.params[0];
+    this.on('processCandidate', 'Candidates', async (req) => {
+        req.notify('Başvuru Sürece Alındı');
+        const p = req.params[req.params.length - 1];
+        const candidateId = p?.ID || p;
         const tx = cds.transaction(req);
         
         const candidate = await tx.run(SELECT.one.from(Candidates).where({ ID: candidateId }));
         if (!candidate) return req.error(404, 'Aday bulunamadı.');
-        await tx.run(UPDATE(Candidates).set({ status: 'SCREENING' }).where({ ID: candidateId }));
+        
+        await tx.run(UPDATE(Candidates).set({ status: 'IN_PROGRESS' }).where({ ID: candidateId }));
         return 'Aday değerlendirme sürecine alındı.';
     });
     
     this.on('approveCandidate', 'Candidates', async (req) => {
-        const candidateId = req.params[0]?.ID || req.params[0];
+        req.notify('Başvuru Onaylandı');
+        const p = req.params[req.params.length - 1];
+        const candidateId = p?.ID || p;
         const tx = cds.transaction(req);
         
         const candidate = await tx.run(SELECT.one.from(Candidates).where({ ID: candidateId }));
         if (!candidate) return req.error(404, 'Aday bulunamadı.');
-        // ACCEPTED statüsüne geçtiğinde sistem otomatik olarak JobPostings tablosunda kontenjanı 1 düşürecektir.
+        
         await tx.run(UPDATE(Candidates).set({ status: 'ACCEPTED' }).where({ ID: candidateId }));
         return 'Aday onaylandı ve işe alındı.';
     });
 
-    
     this.on('rejectCandidate', 'Candidates', async (req) => {
-        const candidateId = req.params[0]?.ID || req.params[0];
+        req.notify('Başvuru Reddedildi');
+        const p = req.params[req.params.length - 1];
+        const candidateId = p?.ID || p;
         const tx = cds.transaction(req);
         
         const candidate = await tx.run(SELECT.one.from(Candidates).where({ ID: candidateId }));
         if (!candidate) return req.error(404, 'Aday bulunamadı.');
+        
         await tx.run(UPDATE(Candidates).set({ status: 'REJECTED' }).where({ ID: candidateId }));
         return 'Aday reddedildi.';
     });
