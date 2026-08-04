@@ -97,7 +97,6 @@ annotate service.CVAnalysisResults with @(
     }
 );
 
-// İK İŞ İLANI YÖNETİMİ (Tam Yetki: Oluştur / Düzenle / Sil)
 annotate service.JobPostings with @(
     UI: {
         HeaderInfo: {
@@ -153,36 +152,46 @@ annotate service.JobPostings with @(
 );
 
 annotate service.JobPostings {
-    department @(Common.ValueList: {
-        CollectionPath: 'Departments',
-        Label: 'Departman',
-        Parameters: [
-            { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: department_ID, ValueListProperty: 'ID' },
-            { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' }
-        ]
-    });
-    position @(Common.ValueList: {
-        CollectionPath: 'Positions',
-        Label: 'Pozisyon',
-        Parameters: [
-            { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: position_ID, ValueListProperty: 'ID' },
-            { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'title' }
-        ]
-    });
+    department_ID @(
+        Common.Text: department.name,
+        Common.TextArrangement: #TextOnly,
+        Common.ValueList: {
+            CollectionPath: 'Departments',
+            Label: 'Departman',
+            Parameters: [
+                { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: department_ID, ValueListProperty: 'ID' },
+                { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' }
+            ]
+        }
+    );
+    position_ID @(
+        Common.Text: position.title,
+        Common.TextArrangement: #TextOnly,
+        Common.ValueList: {
+            CollectionPath: 'Positions',
+            Label: 'Pozisyon',
+            Parameters: [
+                { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: position_ID, ValueListProperty: 'ID' },
+                { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'title' }
+            ]
+        }
+    );
 };
-
 annotate service.Candidates {
-    jobPosting @(Common.ValueList: {
-        CollectionPath: 'PublicJobPostings',
-        Label: 'Açık İş İlanları',
-        Parameters: [
-            { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: jobPosting_ID, ValueListProperty: 'ID' },
-            { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'title' }
-        ]
-    });
+    jobPosting_ID @(
+        Common.Text: jobPosting.title,
+        Common.TextArrangement: #TextOnly,
+        Common.ValueList: {
+            CollectionPath: 'PublicJobPostings',
+            Label: 'Açık İş İlanları',
+            Parameters: [
+                { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: jobPosting_ID, ValueListProperty: 'ID' },
+                { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'title' }
+            ]
+        }
+    );
 };
 
-// MY APPLICATIONS (ADAY EKRANI) FIORI TASARIMI
 annotate service.MyApplications with @(
     UI: {
         HeaderInfo: {
@@ -216,12 +225,13 @@ annotate service.MyApplications with @(
     }
 );
 annotate service.MyApplications with { 
-    jobPosting @(
+    jobPosting_ID @(
+        Common.Label: 'İlan Seçiniz',
         Common.Text: jobPosting.title,
         Common.TextArrangement: #TextOnly,
         Common.ValueListWithFixedValues: true,
         Common.ValueList: {
-            CollectionPath: 'JobPostings',
+            CollectionPath: 'PublicJobPostings',
             Label: 'Açık İş İlanları',
             Parameters: [
                 { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: jobPosting_ID, ValueListProperty: 'ID' },

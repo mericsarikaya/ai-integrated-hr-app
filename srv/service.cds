@@ -28,7 +28,7 @@ service HRService @(path: '/hr') {
     @odata.draft.enabled
     entity Annuals as projection on app.Annuals {
         *,
-        employee.firstName || ' ' || employee.lastName as employeeFullName : String // UI'da çalışanın adını kolayca göstermek için
+         employee.firstName || ' ' || employee.lastName as employeeFullName : String // UI'da çalışanın adını kolayca göstermek için
     }actions {
         @(requires: ['Employee', 'HRAdmin'])
         action approveLeave() returns String;
@@ -140,8 +140,9 @@ service HRService @(path: '/hr') {
         lastName,
         email,
         phone,
-        jobPosting,
-        jobPosting.title as jobPosting_title,
+        jobPosting_ID,
+        jobPosting : redirected to PublicJobPostings,
+        // jobPosting.title as jobPosting_title,
         resumeFile,
         mediaType,
         fileName,

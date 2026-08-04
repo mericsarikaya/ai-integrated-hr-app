@@ -96,8 +96,11 @@ entity JobPostings : cuid, managed {
     openDate         : Date;
     closeDate        : Date;
     vacancies        : Integer default 1;
-    position         : Association to Positions;
-    department       : Association to Departments;
+    position_ID      : UUID;
+    position         : Association to Positions on position.ID = position_ID;
+    
+    department_ID    : UUID;
+    department       : Association to Departments on department.ID = department_ID;
     candidates       : Composition of many Candidates on candidates.jobPosting = $self;
 }
 
@@ -116,7 +119,8 @@ entity Candidates : cuid, managed {
     interviewNotes   : String(2000);
     rejectionReason  : String(500);
 
-    jobPosting       : Association to JobPostings;
+    jobPosting_ID    : UUID;
+    jobPosting       : Association to JobPostings on jobPosting.ID = jobPosting_ID;
 
     cvAnalysis       : Composition of one CVAnalysisResults on cvAnalysis.candidate = $self;
 
