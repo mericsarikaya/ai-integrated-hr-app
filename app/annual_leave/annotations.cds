@@ -2,6 +2,10 @@ using HRService as service from '../../srv/service';
 
 annotate service.Annuals with @odata.draft.enabled;
 
+annotate service.Annuals with {
+    remainingLeaveDays @readonly @Common.Label: 'Kalan İzin Hakkı';
+}
+
 annotate service.Annuals with @(
     UI: {
         HeaderInfo: {
@@ -16,6 +20,7 @@ annotate service.Annuals with @(
             {Value: start_date, Label: 'Başlangıç Tarihi'},
             {Value: end_date, Label: 'Bitiş Tarihi'},
             {Value: approval, Label: 'Onay Durumu'},
+            {Value: remainingLeaveDays, Label: 'Kalan İzin Hakkı'},
             
             {
                 $Type: 'UI.DataFieldForAction',
@@ -39,7 +44,8 @@ annotate service.Annuals with @(
             Data: [
                 {Value: start_date, Label: 'Başlangıç Tarihi'},
                 {Value: end_date, Label: 'Bitiş Tarihi'},
-                {Value: description, Label: 'Açıklama'}
+                {Value: description, Label: 'Açıklama'},
+                {Value: remainingLeaveDays, Label: 'Kalan İzin Hakkı'}
             ]
         },
         

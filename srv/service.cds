@@ -28,7 +28,8 @@ service HRService @(path: '/hr') {
     @odata.draft.enabled
     entity Annuals as projection on app.Annuals {
         *,
-         employee.firstName || ' ' || employee.lastName as employeeFullName : String // UI'da çalışanın adını kolayca göstermek için
+         employee.firstName || ' ' || employee.lastName as employeeFullName : String, // UI'da çalışanın adını kolayca göstermek için
+         employee.annual_days as remainingLeaveDays : Integer // Çalışanın kalan izin hakkı
     }actions {
         @(requires: ['Employee', 'HRAdmin'])
         action approveLeave() returns String;
