@@ -35,7 +35,13 @@ annotate service.PublicJobPostings with @(
                 { Value: status, Label: 'Durum' },
                 { Value: openDate, Label: 'Açılış Tarihi' },
                 { Value: closeDate, Label: 'Kapanış Tarihi' },
-                { Value: vacancies, Label: 'Alınacak Kişi Sayısı' }
+                { Value: vacancies, Label: 'Alınacak Kişi Sayısı' },
+                {
+                $Type: 'UI.DataFieldWithUrl',
+                Value: title,
+                Url  : ( '/myapplications.html?jobId=' || ID ),
+                Label: '📩 Aday Başvuru Ekranına Git'
+                }
             ]
         }
     }

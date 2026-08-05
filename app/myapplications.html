@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Hub | Başvurularım</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #13151a;
+            --card-bg: rgba(30, 34, 45, 0.6);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08), transparent 25%),
+                              radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08), transparent 25%);
+            color: var(--text-main); min-height: 100vh; padding: 1.5rem; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .top-bar { width: 100%; max-width: 720px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .back-btn { background: rgba(255,255,255,0.05); border: none; color: #cbd5e1; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .back-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
+        .page-header { text-align: center; margin-bottom: 1.5rem; }
+        .page-header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.5px; }
+        .page-header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem; }
+
+        .card { width: 100%; max-width: 720px; background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.75rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 1.5rem; }
+        .card h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .card h2 i { color: var(--accent); }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: rgba(15, 17, 26, 0.5); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; transition: all 0.2s ease; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--accent); background: rgba(15, 17, 26, 0.8); }
+        .form-group input::placeholder { color: #6b7280; }
+        .form-group select option { background: #1e222d; }
+        .form-group input[type="file"] { padding: 8px; color: var(--text-muted); }
+
+        .submit-btn { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .submit-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .submit-btn .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .submit-btn.loading .spinner { display: block; }
+        .submit-btn.loading .btn-text { display: none; }
+
+        .message-box { padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 1rem; display: none; align-items: center; gap: 8px; }
+        .message-box.show { display: flex; }
+        .message-box.error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .message-box.success { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        .message-box.warning { background: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); color: #fbbf24; }
+
+        .app-list { display: flex; flex-direction: column; gap: 10px; }
+        .app-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.03); border-radius: 10px; }
+        .app-row .app-info { display: flex; flex-direction: column; gap: 3px; }
+        .app-row .app-title { font-size: 0.9rem; font-weight: 600; }
+        .app-row .app-date { font-size: 0.75rem; color: var(--text-muted); }
+        .status-badge { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; white-space: nowrap; }
+        .status-badge.APPLIED, .status-badge.SCREENING { background: rgba(234, 179, 8, 0.15); color: #fbbf24; }
+        .status-badge.INTERVIEW, .status-badge.IN_PROGRESS, .status-badge.OFFER { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .status-badge.ACCEPTED { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .status-badge.REJECTED, .status-badge.WITHDRAWN { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+        .empty-hint { color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="/index.html" class="back-btn"><i class="ri-arrow-left-line"></i> Ana Sayfa</a>
+    </div>
+
+    <div class="page-header">
+        <h1>Başvurularım</h1>
+        <p>Yeni bir iş başvurusu oluşturun ve mevcut başvurularınızı takip edin.</p>
+    </div>
+
+    <div class="card">
+        <h2><i class="ri-file-add-line"></i> Yeni Başvuru Oluştur</h2>
+
+        <div class="message-box warning" id="warningMsg">
+            <i class="ri-alert-line"></i>
+            <span id="warningText"></span>
+        </div>
+        <div class="message-box error" id="errorMsg">
+            <i class="ri-error-warning-line"></i>
+            <span id="errorText"></span>
+        </div>
+        <div class="message-box success" id="successMsg">
+            <i class="ri-check-line"></i>
+            <span id="successText"></span>
+        </div>
+
+        <form id="applyForm" onsubmit="handleApply(event)">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Adınız</label>
+                    <input type="text" id="firstName" placeholder="Adınız" required>
+                </div>
+                <div class="form-group">
+                    <label>Soyadınız</label>
+                    <input type="text" id="lastName" placeholder="Soyadınız" required>
+                </div>
+                <div class="form-group">
+                    <label>E-Posta</label>
+                    <input type="email" id="email" placeholder="ornek@mail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Telefon</label>
+                    <input type="text" id="phone" placeholder="05XXXXXXXXX">
+                </div>
+                <div class="form-group full">
+                    <label>İlan Seçiniz</label>
+                    <select id="jobPosting" required>
+                        <option value="">Yükleniyor...</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>CV (PDF) — Opsiyonel</label>
+                    <input type="file" id="cvFile" accept="application/pdf">
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="applyBtn">
+                <span class="spinner"></span>
+                <span class="btn-text">Başvuruyu Kaydet</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2><i class="ri-list-check-2"></i> Geçmiş Başvurularım</h2>
+        <div class="app-list" id="appList">
+            <div class="empty-hint">Yükleniyor...</div>
+        </div>
+    </div>
+
+    <script>
+        async function getCsrfToken() {
+            const res = await fetch('/hr/MyApplications', { headers: { 'X-CSRF-Token': 'Fetch' } });
+            return res.headers.get('x-csrf-token');
+        }
+
+        async function loadJobPostings() {
+            const select = document.getElementById('jobPosting');
+            const warningMsg = document.getElementById('warningMsg');
+            const warningText = document.getElementById('warningText');
+            const preselectedJobId = new URLSearchParams(window.location.search).get('jobId');
+            try {
+                const res = await fetch("/hr/PublicJobPostings?$filter=status eq 'OPEN'");
+                if (res.status === 401 || res.redirected) { window.location.href = '/login.html'; return; }
+                const data = await res.json();
+                const postings = data.value || [];
+                select.innerHTML = '<option value="">İlan seçiniz...</option>' +
+                    postings.map(j => `<option value="${j.ID}">${j.title}</option>`).join('');
+
+                if (preselectedJobId) {
+                    if (postings.some(j => j.ID === preselectedJobId)) {
+                        select.value = preselectedJobId;
+                    } else {
+                        const jobRes = await fetch(`/hr/PublicJobPostings(ID='${preselectedJobId}')`);
+                        if (jobRes.ok) {
+                            const job = await jobRes.json();
+                            warningText.textContent = `"${job.title}" ilanı artık aktif değil (Durum: ${jobStatusLabel(job.status)}). Lütfen listeden açık bir ilan seçiniz.`;
+                        } else {
+                            warningText.textContent = 'Seçtiğiniz ilan bulunamadı veya kaldırılmış. Lütfen listeden bir ilan seçiniz.';
+                        }
+                        warningMsg.classList.add('show');
+                    }
+                }
+            } catch (err) {
+                select.innerHTML = '<option value="">İlanlar yüklenemedi</option>';
+            }
+        }
+
+        function jobStatusLabel(status) {
+            const labels = { OPEN: 'Açık', CLOSED: 'Kapalı', ON_HOLD: 'Beklemede', CANCELLED: 'İptal Edildi' };
+            return labels[status] || status || '-';
+        }
+
+        function statusLabel(status) {
+            const labels = {
+                APPLIED: 'Başvuruldu', SCREENING: 'İnceleniyor', INTERVIEW: 'Mülakat',
+                IN_PROGRESS: 'Süreçte', OFFER: 'Teklif', ACCEPTED: 'Kabul Edildi',
+                REJECTED: 'Reddedildi', WITHDRAWN: 'Geri Çekildi'
+            };
+            return labels[status] || status || '-';
+        }
+
+        async function loadMyApplications() {
+            const list = document.getElementById('appList');
+            try {
+                const res = await fetch('/hr/MyApplications?$expand=jobPosting($select=title)&$orderby=createdAt desc');
+                if (res.status === 401 || res.redirected) { window.location.href = '/login.html'; return; }
+                const data = await res.json();
+                const apps = data.value || [];
+                if (apps.length === 0) {
+                    list.innerHTML = '<div class="empty-hint">Henüz bir başvurunuz yok.</div>';
+                    return;
+                }
+                list.innerHTML = apps.map(a => `
+                    <div class="app-row">
+                        <div class="app-info">
+                            <span class="app-title">${(a.jobPosting && a.jobPosting.title) || 'İlan silinmiş'}</span>
+                            <span class="app-date">${a.createdAt ? new Date(a.createdAt).toLocaleDateString('tr-TR') : ''}${a.fileName ? ' · CV: ' + a.fileName : ''}</span>
+                        </div>
+                        <span class="status-badge ${a.status}">${statusLabel(a.status)}</span>
+                    </div>
+                `).join('');
+            } catch (err) {
+                list.innerHTML = '<div class="empty-hint">Başvurular yüklenemedi.</div>';
+            }
+        }
+
+        async function handleApply(e) {
+            e.preventDefault();
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const jobId = document.getElementById('jobPosting').value;
+            const cvFile = document.getElementById('cvFile').files[0];
+
+            const btn = document.getElementById('applyBtn');
+            const warningMsg = document.getElementById('warningMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            const errorText = document.getElementById('errorText');
+            const successMsg = document.getElementById('successMsg');
+            const successText = document.getElementById('successText');
+
+            warningMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+            successMsg.classList.remove('show');
+
+            if (!jobId) {
+                errorText.textContent = 'Lütfen bir ilan seçiniz.';
+                errorMsg.classList.add('show');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.classList.add('loading');
+
+            try {
+                const csrf = await getCsrfToken();
+
+                const applyRes = await fetch(`/hr/PublicJobPostings(ID='${jobId}')/HRService.applyToJob`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+                    body: JSON.stringify({ firstName, lastName, email, phone })
+                });
+                const applyData = await applyRes.json();
+
+                if (!applyRes.ok) {
+                    throw new Error((applyData.error && applyData.error.message) || 'Başvuru oluşturulamadı.');
+                }
+
+                // Yeni oluşturulan kaydı bul (CV varsa yüklemek için)
+                if (cvFile) {
+                    const findRes = await fetch(`/hr/MyApplications?$filter=email eq '${email}' and jobPosting_ID eq '${jobId}'&$orderby=createdAt desc&$top=1`);
+                    const findData = await findRes.json();
+                    const newApp = findData.value && findData.value[0];
+
+                    if (newApp) {
+                        const csrf2 = await getCsrfToken();
+                        await fetch(`/hr/MyApplications(ID='${newApp.ID}',IsActiveEntity=true)`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf2 },
+                            body: JSON.stringify({ mediaType: cvFile.type || 'application/pdf', fileName: cvFile.name })
+                        });
+                        const arrayBuffer = await cvFile.arrayBuffer();
+                        await fetch(`/hr/MyApplications(ID='${newApp.ID}',IsActiveEntity=true)/resumeFile`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': cvFile.type || 'application/pdf', 'X-CSRF-Token': csrf2 },
+                            body: arrayBuffer
+                        });
+                    }
+                }
+
+                successText.textContent = applyData.value || 'Başvurunuz başarıyla kaydedildi.';
+                successMsg.classList.add('show');
+                document.getElementById('applyForm').reset();
+                await loadJobPostings();
+                await loadMyApplications();
+            } catch (err) {
+                errorText.textContent = err.message || 'Başvuru sırasında bir hata oluştu.';
+                errorMsg.classList.add('show');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+            }
+        }
+
+        loadJobPostings();
+        loadMyApplications();
+    </script>
+</body>
+</html>
