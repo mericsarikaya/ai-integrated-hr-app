@@ -24,6 +24,17 @@ export default cds.service.impl(async function() {
     });
 
 
+    this.before('READ', MyApplications, (req) => {
+        if (!req.user.is('HRAdmin')) {
+            req.query.where({ userId: req.user.customId });
+        }
+    });
+
+    this.before('CREATE', MyApplications, (req) => {
+        req.data.userId = req.user.customId;
+    });
+
+
     this.before('CREATE', Employees, async (req) => {
         const data = req.data;
         

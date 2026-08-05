@@ -7,6 +7,7 @@
     "@google/generative-ai": "^0.24.1",
     "@sap-cloud-sdk/http-client": "^4.7.0",
     "@sap/cds": "^10.0.3",
+    "@sap/cds-fiori": "^2.3.0",
     "@sap/xssec": "^4",
     "dotenv": "^17.4.2",
     "pdf-parse": "^2.4.5"
@@ -28,7 +29,7 @@
           }
           },
       "[production]": {
-        "auth": "xsuaa",
+        "auth": "mocked",
         "db": {
           "kind": "hana",
           "vcap": {
@@ -51,6 +52,14 @@
           "calisan": { "password": "2", "roles": ["Employee"] },
           "ik":      { "password": "3", "roles": ["HRAdmin"] }
         }
+      }
+    },
+    "fiori": {
+      "preview": true,
+      "routes": true,
+      "[production]": {
+        "preview": true,
+        "routes": true
       }
     }
   }

@@ -10,6 +10,7 @@ build-parameters:
       commands:
         - npm ci
         - npx cds build --production
+        - node copy-app.js
 modules:
   - name: hr-app-srv
     type: nodejs

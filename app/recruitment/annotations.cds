@@ -143,7 +143,7 @@ annotate service.JobPostings with @(
                 {
                 $Type: 'UI.DataFieldWithUrl',
                 Value: title,
-                Url  : '/$fiori-preview/HRService/MyApplications?prefferredMode=create#preview-app',
+                Url  : ( '/myapplications.html?jobId=' || ID ),
                 Label: '📩 Aday Başvuru Ekranına Git'
                 }
             ]
@@ -152,7 +152,7 @@ annotate service.JobPostings with @(
 );
 
 annotate service.JobPostings {
-    department_ID @(
+    department @(
         Common.Text: department.name,
         Common.TextArrangement: #TextOnly,
         Common.ValueList: {
@@ -164,7 +164,7 @@ annotate service.JobPostings {
             ]
         }
     );
-    position_ID @(
+    position @(
         Common.Text: position.title,
         Common.TextArrangement: #TextOnly,
         Common.ValueList: {
@@ -178,7 +178,7 @@ annotate service.JobPostings {
     );
 };
 annotate service.Candidates {
-    jobPosting_ID @(
+    jobPosting @(
         Common.Text: jobPosting.title,
         Common.TextArrangement: #TextOnly,
         Common.ValueList: {
@@ -225,7 +225,7 @@ annotate service.MyApplications with @(
     }
 );
 annotate service.MyApplications with { 
-    jobPosting_ID @(
+    jobPosting @(
         Common.Label: 'İlan Seçiniz',
         Common.Text: jobPosting.title,
         Common.TextArrangement: #TextOnly,

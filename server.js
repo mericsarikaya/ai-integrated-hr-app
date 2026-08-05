@@ -1,5 +1,9 @@
 import cds from '@sap/cds';
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 cds.on('bootstrap', (app) => {
 
@@ -81,6 +85,9 @@ cds.on('bootstrap', (app) => {
             res.status(500).send('Sistem Hatası');
         }
     });
+
+    // 4. Statik Dosyalar (login.html, register.html, css, js, ve login sonrası index.html)
+    app.use(express.static(path.join(__dirname, 'app')));
 
 
 // Kayıt Olma Endpoint

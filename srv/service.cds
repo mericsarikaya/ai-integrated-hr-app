@@ -131,7 +131,8 @@ service HRService @(path: '/hr') {
 
 
     @(restrict: [
-        { grant: '*', to: 'Candidate' }
+        { grant: '*',    to: 'Candidate' },
+        { grant: 'READ', to: 'HRAdmin' }
     ])
     @odata.draft.enabled
     entity MyApplications as projection on app.Candidates {
@@ -140,7 +141,6 @@ service HRService @(path: '/hr') {
         lastName,
         email,
         phone,
-        jobPosting_ID,
         jobPosting : redirected to PublicJobPostings,
         // jobPosting.title as jobPosting_title,
         resumeFile,

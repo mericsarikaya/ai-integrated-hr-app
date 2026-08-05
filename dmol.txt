@@ -1,0 +1,8 @@
+Downloading logs of multi-target app operation with ID 7564f0ed-90ac-11f1-8dd2-eeee0a922324 in org 268a3369trial / space dev as meric.sarikaya@bs.nttdata.com...
+OK
+Saving logs to C:\Users\meric\Desktop\Dersler\NTT Staj\Proje\ai-integrated-hr-app\mta-op-7564f0ed-90ac-11f1-8dd2-eeee0a922324...
+  OPERATION.log
+  hr-app-db-deployer.log
+  hr-app.log
+  hr-app-srv.log
+OK
