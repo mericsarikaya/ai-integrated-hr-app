@@ -14,13 +14,19 @@ annotate service.Annuals with @(
             Title: { Value: employee.firstName},
             Description: { Value: employee.lastName}
         },
-        HeaderFacets: [],
+        HeaderFacets: [
+            {
+                $Type: 'UI.ReferenceFacet',
+                Label: 'Kalan İzin Hakkı',
+                Target: '@UI.FieldGroup#RemainingLeaveHeader'
+            }
+        ],
         SelectionFields: [ employee.firstName, employee.lastName],
         LineItem: [
             {Value: start_date, Label: 'Başlangıç Tarihi'},
             {Value: end_date, Label: 'Bitiş Tarihi'},
             {Value: approval, Label: 'Onay Durumu'},
-            {Value: remainingLeaveDays, Label: 'Kalan İzin Hakkı'},
+            {Value: remainingLeaveDays, Label: 'Kalan İzin Hakkı', ![@UI.Importance]: #High},
             
             {
                 $Type: 'UI.DataFieldForAction',
@@ -45,6 +51,11 @@ annotate service.Annuals with @(
                 {Value: start_date, Label: 'Başlangıç Tarihi'},
                 {Value: end_date, Label: 'Bitiş Tarihi'},
                 {Value: description, Label: 'Açıklama'},
+                {Value: remainingLeaveDays, Label: 'Kalan İzin Hakkı'}
+            ]
+        },
+        FieldGroup#RemainingLeaveHeader: {
+            Data: [
                 {Value: remainingLeaveDays, Label: 'Kalan İzin Hakkı'}
             ]
         },
