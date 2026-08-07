@@ -12,6 +12,16 @@ default-*.json
 mta_archives/
 *_mta_build_tmp
 *.mtar
+mta-op-*/
+
+# Local DB dumps / debug artifacts
+*.db
+full.sql
+dmol.txt
+tmp.xml
+edmx.xml
+tmp_seed_pw.cjs
+test-analyze.cjs
 
 # Other
 .DS_Store
