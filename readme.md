@@ -29,7 +29,7 @@ okunur analytics servisi
   - **Deployment**: Multi-Target Application (MTA) - Cloud Foundry
 
   ## Proje Yapısı
-
+\`\`\`
 app/                        UI (Fiori annotations + statik HTML sayfaları)
   ├── chatbot.html
   ├── login.html
@@ -46,7 +46,6 @@ app/                        UI (Fiori annotations + statik HTML sayfaları)
   │   └── annotations.cds
   └── router/                 App Router
       └── xs-app.json
-
   db/
   └── schema.cds              Domain modeli (Employees, Candidates, JobPostings, ...)
 
@@ -63,7 +62,7 @@ app/                        UI (Fiori annotations + statik HTML sayfaları)
   package.json
 
   ## Kurulum
-
+\`\`\`
   ```bash
   npm install
 
