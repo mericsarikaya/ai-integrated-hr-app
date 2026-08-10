@@ -135,13 +135,14 @@ entity Candidates : cuid, managed {
 
 entity CVAnalysisResults : cuid, managed {
     candidate        : Association to Candidates;
-    overallScore     : Decimal(5,2);       // 0-100 arası genel skor
-    skillMatchScore  : Decimal(5,2);       // Beceri eşleşme skoru
-    experienceScore  : Decimal(5,2);       // Deneyim uyum skoru
+    recommendation   : String(2000);       // AI'nın nihai kararı/önerisi
+    languageSkills   : String(1000);       // CV'den tespit edilen yabancı dil bilgileri (örn: "İngilizce: İleri (C1), Almanca: Başlangıç (A1)")
+    university       : String(200);        // Adayın mezun olduğu üniversite
+    major            : String(200);        // Adayın bölümü
+    location         : String(200);        // Adayın lokasyonu (varsa)
     educationScore   : Decimal(5,2);       // Eğitim uyum skoru
     strengths        : LargeString;        // JSON array: güçlü yönler
     weaknesses       : LargeString;        // JSON array: zayıf yönler
-    recommendation   : String(2000);       // AI önerisi
     rawResponse      : LargeString;        // AI'dan gelen ham yanıt
     analyzedAt       : Timestamp;
 }

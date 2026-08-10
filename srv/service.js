@@ -148,15 +148,17 @@ export default cds.service.impl(async function() {
                 
                 Lütfen adayın bu ilana uygunluğunu objektif bir şekilde analiz et asla iyimser veya kötümser olma neyse o olsun. 
                 Pozisyona uygunluğuna, tecrübesine, aldığı eğitimlere kısacası her şeye bak ve bana AŞAĞIDAKİ JSON FORMATINDA cevap dön. (Sadece JSON dön, dışına başka bir metin yazma).
+                Ayrıca CV metninde geçen yabancı dilleri ve seviyelerini, adayın mezun olduğu üniversiteyi, bölümünü ve (varsa) yaşadığı lokasyonu da tespit et. CV'de bu bilgilerden biri belirtilmemişse "Belirtilmemiş" yaz.
                 
                 {
-                  "overallScore": 85,
-                  "skillMatchScore": 90,
-                  "experienceScore": 80,
+                  "recommendation": "İK ekibi için 2 cümlelik nihai öneri (Örn: Mülakata çağrılmalı, çünkü...)",
+                  "languageSkills": "İngilizce: İleri (C1), Almanca: Başlangıç (A1)",
+                  "university": "Adayın mezun olduğu üniversite",
+                  "major": "Adayın bölümü",
+                  "location": "Adayın yaşadığı şehir/lokasyon",
                   "educationScore": 100,
                   "strengths": ["Güçlü yön 1", "Güçlü yön 2"],
-                  "weaknesses": ["Gelişime açık yön 1", "Gelişime açık yön 2"],
-                  "recommendation": "İK ekibi için 2 cümlelik nihai öneri (Örn: Mülakata çağrılmalı, çünkü...)"
+                  "weaknesses": ["Gelişime açık yön 1", "Gelişime açık yön 2"]
                 }
             `;
 
@@ -169,19 +171,20 @@ export default cds.service.impl(async function() {
             await tx.run(
                 INSERT.into(CVAnalysisResults).entries({
                     candidate_ID: candidateId,
-                    overallScore: aiData.overallScore,
-                    skillMatchScore: aiData.skillMatchScore,
-                    experienceScore: aiData.experienceScore,
+                    recommendation: aiData.recommendation,
+                    languageSkills: aiData.languageSkills || 'Belirtilmemiş',
+                    university: aiData.university || 'Belirtilmemiş',
+                    major: aiData.major || 'Belirtilmemiş',
+                    location: aiData.location || 'Belirtilmemiş',
                     educationScore: aiData.educationScore,
                     strengths: JSON.stringify(aiData.strengths),
                     weaknesses: JSON.stringify(aiData.weaknesses),
-                    recommendation: aiData.recommendation,
                     rawResponse: responseText, 
                     analyzedAt: new Date().toISOString()
                 })
             );
 
-            return `CV Analizi başarıyla tamamlandı. Adayın Genel Skoru: ${aiData.overallScore}`;
+            return `CV Analizi başarıyla tamamlandı. Nihai Karar: ${aiData.recommendation}`;
         } catch (error) {
             req.error(500, `AI Analizi sırasında hata: ${error.message}`);
         }
