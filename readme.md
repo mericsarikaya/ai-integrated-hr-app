@@ -30,14 +30,37 @@ okunur analytics servisi
 
   ## Proje Yapısı
 
+app/                        UI (Fiori annotations + statik HTML sayfaları)
+  ├── chatbot.html
+  ├── login.html
+  ├── register.html
+  ├── myapplications.html
+  ├── index.html
+  ├── recruitment/
+  │   └── annotations.cds
+  ├── job_postings/
+  │   └── annotations.cds
+  ├── employees/
+  │   └── annotations.cds
+  ├── annual_leave/
+  │   └── annotations.cds
+  └── router/                 App Router
+      └── xs-app.json
 
-├── app/                 # UI (Fiori annotations + statik HTML sayfaları) │   ├── chatbot.html │   ├── login.html /
-register.html │   ├── myapplications.html │   ├── recruitment/, job_postings/, employees/, annual_leave/
-(annotations.cds) │   └── router/          # App Router (xs-app.json) ├── db/ │   └── schema.cds       # Domain modeli
-(Employees, Candidates, JobPostings, ...) ├── srv/ │   ├── service.cds/.js  # HRService - ana iş servisi │   └──
-analytics.cds/.js# AnalyticsService - dashboard/istatistik servisi ├── test/ │   └── api.http         # Manuel API
-testleri ├── mta.yaml             # Cloud Foundry deployment tanımı └── package.json
+  db/
+  └── schema.cds              Domain modeli (Employees, Candidates, JobPostings, ...)
 
+  srv/
+  ├── service.cds             HRService - ana iş servisi
+  ├── service.js
+  ├── analytics.cds           AnalyticsService - dashboard/istatistik servisi
+  └── analytics.js
+
+  test/
+  └── api.http                Manuel API testleri
+
+  mta.yaml                    Cloud Foundry deployment tanımı
+  package.json
 
   ## Kurulum
 
