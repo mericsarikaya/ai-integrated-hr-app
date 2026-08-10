@@ -88,10 +88,11 @@ annotate service.CVAnalysisResults with @(
     UI: {
         FieldGroup#AIAnalysis: {
             Data: [
-                { Value: overallScore, Label: 'Genel Yapay Zeka Skoru' },
-                { Value: skillMatchScore, Label: 'Beceri Eşleşmesi' },
-                { Value: experienceScore, Label: 'Deneyim Puanı' },
-                { Value: recommendation, Label: 'Nihai Karar (AI)' }
+                { Value: recommendation, Label: 'Nihai Karar (AI)' },
+                { Value: languageSkills, Label: 'Yabancı Dil Bilgisi' },
+                { Value: university, Label: 'Üniversite' },
+                { Value: major, Label: 'Bölüm' },
+                { Value: location, Label: 'Lokasyon' }
             ]
         }
     }

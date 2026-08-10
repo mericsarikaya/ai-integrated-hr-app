@@ -29,7 +29,7 @@ service AnalyticsService @(path: '/analytics') {
         jobPosting.title               as jobTitle,
         jobPosting.department.name     as departmentName,
         count(ID)                      as totalApplicants  : Integer,
-        avg(cvAnalysis.overallScore)   as avgCVScore        : Decimal(5,2)
+        avg(cvAnalysis.educationScore) as avgCVScore        : Decimal(5,2)
     } group by jobPosting.ID, jobPosting.title, jobPosting.department.name;
 
     // --- Performans Trendi ---
